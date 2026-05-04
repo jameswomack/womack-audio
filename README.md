@@ -1,6 +1,14 @@
 # Womack FX
 
 <p align="center">
+  <img src="docs/assets/womackfx-banner.svg" alt="Womack FX banner" width="100%" />
+</p>
+
+<p align="center">
+  <img src="docs/assets/womackfx-mark.svg" alt="Womack FX logo" width="120" />
+</p>
+
+<p align="center">
   <strong>🔥 A bold, colorful, tape-soaked open-source multi-effect plugin built with JUCE.</strong>
 </p>
 
@@ -30,6 +38,25 @@
 The result is a compact, expressive plugin that feels like a tiny pedalboard with a cinematic streak.
 
 This project is built in public, designed to sound fun, and meant to be a codebase worth exploring, extending, and showing off.
+
+## At a glance
+
+- **Name:** Womack FX
+- **Type:** open-source audio multi-effect plugin
+- **Formats:** AU, VST3, Standalone
+- **Platform today:** macOS
+- **Core chain:** `Fuzz → Univibe → Tape Delay`
+- **Vibe:** psychedelic, saturated, animated, performance-friendly
+
+## UI preview
+
+<p align="center">
+  <img src="docs/assets/womackfx-ui-screenshot.png" alt="Womack FX plugin UI screenshot" width="100%" />
+</p>
+
+<p align="center">
+  <em>The current Womack FX interface: three animated effect sections, colorful visualizers, and labeled controls built for actual play.</em>
+</p>
 
 ## Why it stands out
 
@@ -164,6 +191,18 @@ plugins/WomackFX/
 └── CMakeLists.txt
 ```
 
+## Roadmap
+
+- [x] Multi-stage signal chain with custom DSP
+- [x] Custom animated plugin UI
+- [x] Labeled controls for all effect sections
+- [x] AU / VST3 / Standalone builds
+- [ ] Screenshots and audio demos in the repo
+- [ ] Presets / artist patches
+- [ ] Tempo-sync options for delay and modulation
+- [ ] Expanded effect modes and alternate voicings
+- [ ] Automated CI builds
+
 ## Current status
 
 Womack FX is already a real, playable plugin—not just a scaffold.
@@ -182,6 +221,16 @@ And because the code is readable and modular, it is also a great foundation for:
 - expanded modulation
 - richer tone shaping
 - additional stompbox modules
+
+## Show some love
+
+If Womack FX makes you smile, melt, wobble, or immediately open your DAW, here is the most helpful open-source support package:
+
+- **⭐ Star the repo**
+- **🍴 Fork it and build your own flavor**
+- **📣 Share it** with musicians, DSP nerds, plugin devs, and tone freaks
+- **🐛 Open issues** for bugs, ideas, and feature requests
+- **🎛️ Post screenshots / clips** if you make something beautiful or unhinged with it
 
 ## Contributing
 

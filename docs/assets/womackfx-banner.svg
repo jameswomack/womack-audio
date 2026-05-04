@@ -1,0 +1,77 @@
+<svg width="1600" height="640" viewBox="0 0 1600 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="640" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#12091F"/>
+      <stop offset="0.45" stop-color="#1D1034"/>
+      <stop offset="1" stop-color="#0C162C"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="202" y1="162" x2="501" y2="416" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF6B6B"/>
+      <stop offset="0.5" stop-color="#FFB347"/>
+      <stop offset="1" stop-color="#FFD93D"/>
+    </linearGradient>
+    <linearGradient id="aqua" x1="1094" y1="126" x2="1388" y2="398" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#57E6FF"/>
+      <stop offset="1" stop-color="#6D7CFF"/>
+    </linearGradient>
+    <radialGradient id="glowL" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(232 118) rotate(37.4814) scale(296.243 229.309)">
+      <stop stop-color="#FF7A59" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#FF7A59" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowR" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1332 132) rotate(143.413) scale(340.858 254.12)">
+      <stop stop-color="#59F0FF" stop-opacity="0.62"/>
+      <stop offset="1" stop-color="#59F0FF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur" x="0" y="0" width="1600" height="640" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="40"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="640" rx="32" fill="url(#bg)"/>
+  <g filter="url(#blur)">
+    <ellipse cx="250" cy="132" rx="180" ry="110" fill="url(#glowL)"/>
+    <ellipse cx="1330" cy="126" rx="220" ry="140" fill="url(#glowR)"/>
+  </g>
+
+  <circle cx="127" cy="95" r="4" fill="#FFD93D" fill-opacity="0.6"/>
+  <circle cx="1490" cy="550" r="6" fill="#57E6FF" fill-opacity="0.45"/>
+  <circle cx="1448" cy="104" r="3" fill="#FF6B6B" fill-opacity="0.8"/>
+
+  <g opacity="0.18">
+    <path d="M0 508C228 462 416 424 610 470C804 516 964 596 1245 576C1388 566 1496 527 1600 472" stroke="#FFFFFF" stroke-width="2"/>
+    <path d="M0 544C241 500 420 477 599 512C778 547 961 617 1237 605C1373 599 1496 565 1600 522" stroke="#57E6FF" stroke-width="2"/>
+  </g>
+
+  <g transform="translate(108 132)">
+    <rect x="0" y="0" width="360" height="360" rx="28" fill="#0E1321" fill-opacity="0.9" stroke="#FFFFFF" stroke-opacity="0.08"/>
+    <circle cx="180" cy="180" r="126" fill="#111827" stroke="url(#accent)" stroke-width="12"/>
+    <circle cx="180" cy="180" r="74" fill="#0B1020" stroke="#FFB347" stroke-opacity="0.4" stroke-width="2"/>
+    <circle cx="180" cy="180" r="9" fill="#FFF3D3"/>
+    <path d="M180 180L255 109" stroke="#FFF3D3" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="180" cy="180" r="100" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="2" stroke-dasharray="3 10"/>
+    <text x="28" y="42" fill="#FFD8A8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">FUZZ / VIBE / DELAY</text>
+    <text x="28" y="335" fill="#B8C0D9" font-family="Arial, Helvetica, sans-serif" font-size="16">sound-first open-source multi-FX</text>
+  </g>
+
+  <g transform="translate(1032 126)">
+    <rect x="0" y="0" width="430" height="372" rx="28" fill="#0B1222" fill-opacity="0.85" stroke="#FFFFFF" stroke-opacity="0.08"/>
+    <text x="34" y="50" fill="#8DEBFF" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">SIGNAL CHAIN</text>
+    <rect x="34" y="82" width="100" height="46" rx="23" fill="#2B1620" stroke="#FF6B6B"/>
+    <rect x="166" y="82" width="110" height="46" rx="23" fill="#13252A" stroke="#57E6FF"/>
+    <rect x="308" y="82" width="92" height="46" rx="23" fill="#192130" stroke="#6D7CFF"/>
+    <text x="66" y="111" fill="#FFE2D9" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">FUZZ</text>
+    <text x="195" y="111" fill="#D8FBFF" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">UNIVIBE</text>
+    <text x="327" y="111" fill="#DDE1FF" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">DELAY</text>
+    <text x="34" y="182" fill="#F5F7FF" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="800">WOMACK FX</text>
+    <text x="34" y="232" fill="#C7D0EA" font-family="Arial, Helvetica, sans-serif" font-size="24">Fuzz. Swirl. Echo. Glow.</text>
+    <text x="34" y="276" fill="#AAB6D6" font-family="Arial, Helvetica, sans-serif" font-size="19">Expressive color for guitars, synths, drums,</text>
+    <text x="34" y="304" fill="#AAB6D6" font-family="Arial, Helvetica, sans-serif" font-size="19">and anything begging for a little motion and fire.</text>
+    <text x="34" y="346" fill="#FFD8A8" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">MIT licensed • JUCE • AU / VST3 / Standalone</text>
+  </g>
+
+  <g transform="translate(540 246)">
+    <text fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="86" font-weight="900">WFX</text>
+    <rect x="2" y="90" width="270" height="4" rx="2" fill="url(#accent)"/>
+    <text x="2" y="136" fill="#C5CEE8" font-family="Arial, Helvetica, sans-serif" font-size="28">open-source • cinematic • playable</text>
+  </g>
+</svg>

@@ -1,0 +1,21 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="64" y1="48" x2="456" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1A1030"/>
+      <stop offset="1" stop-color="#0C182B"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="120" y1="92" x2="396" y2="404" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF6B6B"/>
+      <stop offset="0.5" stop-color="#FFD93D"/>
+      <stop offset="1" stop-color="#57E6FF"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="88" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="146" fill="#0D1323" stroke="url(#ring)" stroke-width="18"/>
+  <circle cx="256" cy="256" r="88" fill="#0B1020" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="2"/>
+  <circle cx="256" cy="256" r="10" fill="#FFF2CF"/>
+  <path d="M256 256L349 168" stroke="#FFF2CF" stroke-width="12" stroke-linecap="round"/>
+  <path d="M126 115H196L230 285L264 168L300 320L334 226L369 397H341L316 286L282 397L248 246L214 397L180 226L154 397H126L162 115H126Z" fill="#FFFFFF"/>
+  <text x="155" y="455" fill="#C7D0EA" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">WOMACK FX</text>
+</svg>
