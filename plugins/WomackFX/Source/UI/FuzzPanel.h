@@ -26,7 +26,9 @@ private:
     FuzzEffect& fuzzEffect;
 
     juce::Slider driveKnob, toneKnob, mixKnob;
+	    juce::Label driveLabel { {}, "Drive" }, toneLabel { {}, "Tone" }, mixLabel { {}, "Mix" };
     juce::ComboBox typeSelector;
+	    juce::Label typeLabel { {}, "Type" }, curveLabel { {}, "Curve" };
     juce::ToggleButton enableBtn { "FUZZ" };
     TransferCurveViz curveViz;
 

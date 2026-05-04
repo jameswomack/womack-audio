@@ -17,12 +17,38 @@ UnivibePanel::UnivibePanel (juce::AudioProcessorValueTreeState& apvts, UnivibeEf
     setupKnob (feedbackKnob);
     setupKnob (mixKnob);
 
+    auto setupLabel = [] (juce::Label& label)
+    {
+        label.setJustificationType (juce::Justification::centred);
+        label.setColour (juce::Label::textColourId, juce::Colours::white.withAlpha (0.8f));
+        label.setFont (juce::FontOptions (12.0f, juce::Font::bold));
+        label.setInterceptsMouseClicks (false, false);
+    };
+
+    setupLabel (rateLabel);
+    setupLabel (depthLabel);
+    setupLabel (feedbackLabel);
+    setupLabel (mixLabel);
+    setupLabel (rotorLabel);
+
     addAndMakeVisible (rateKnob);
     addAndMakeVisible (depthKnob);
     addAndMakeVisible (feedbackKnob);
     addAndMakeVisible (mixKnob);
+    addAndMakeVisible (rateLabel);
+    addAndMakeVisible (depthLabel);
+    addAndMakeVisible (feedbackLabel);
+    addAndMakeVisible (mixLabel);
     addAndMakeVisible (enableBtn);
     addAndMakeVisible (rotorViz);
+    addAndMakeVisible (rotorLabel);
+
+    rateKnob.setTooltip ("LFO speed controlling the Univibe swirl rate.");
+    depthKnob.setTooltip ("Depth of the phase modulation.");
+    feedbackKnob.setTooltip ("Feedback amount for a more pronounced throb.");
+    mixKnob.setTooltip ("Blend between the dry signal and Univibe effect.");
+    enableBtn.setTooltip ("Enable or bypass the Univibe effect.");
+    rotorViz.setTooltip ("Animated rotor display reflecting the current Univibe modulation phase.");
 
     rateAtt     = std::make_unique<SliderAttachment> (apvts, ParamIDs::vibeRate,     rateKnob);
     depthAtt    = std::make_unique<SliderAttachment> (apvts, ParamIDs::vibeDepth,    depthKnob);
@@ -48,14 +74,22 @@ void UnivibePanel::resized()
     enableBtn.setBounds (topRow.removeFromLeft (80));
 
     auto vizArea = bounds.removeFromTop (bounds.getHeight() / 2);
+    rotorLabel.setBounds (vizArea.removeFromTop (16));
     rotorViz.setBounds (vizArea.reduced (4));
 
     auto knobRow = bounds;
     int knobW = knobRow.getWidth() / 4;
-    rateKnob.setBounds     (knobRow.removeFromLeft (knobW));
-    depthKnob.setBounds    (knobRow.removeFromLeft (knobW));
-    feedbackKnob.setBounds (knobRow.removeFromLeft (knobW));
-    mixKnob.setBounds      (knobRow);
+
+    auto layoutKnob = [] (juce::Rectangle<int> area, juce::Label& label, juce::Slider& knob)
+    {
+        label.setBounds (area.removeFromTop (16));
+        knob.setBounds (area);
+    };
+
+    layoutKnob (knobRow.removeFromLeft (knobW), rateLabel, rateKnob);
+    layoutKnob (knobRow.removeFromLeft (knobW), depthLabel, depthKnob);
+    layoutKnob (knobRow.removeFromLeft (knobW), feedbackLabel, feedbackKnob);
+    layoutKnob (knobRow, mixLabel, mixKnob);
 }
 
 void UnivibePanel::RotorViz::paint (juce::Graphics& g)

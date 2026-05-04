@@ -18,6 +18,7 @@ private:
     WomackFXProcessor& processor;
     juce::OpenGLContext glContext;
     MainPanel mainPanel;
+    juce::TooltipWindow tooltipWindow;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WomackFXEditor)
 };

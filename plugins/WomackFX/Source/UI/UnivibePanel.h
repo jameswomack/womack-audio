@@ -26,6 +26,8 @@ private:
     UnivibeEffect& vibeEffect;
 
     juce::Slider rateKnob, depthKnob, feedbackKnob, mixKnob;
+	    juce::Label rateLabel { {}, "Rate" }, depthLabel { {}, "Depth" }, feedbackLabel { {}, "Feedback" }, mixLabel { {}, "Mix" };
+	    juce::Label rotorLabel { {}, "Rotor" };
     juce::ToggleButton enableBtn { "VIBE" };
     RotorViz rotorViz;
 

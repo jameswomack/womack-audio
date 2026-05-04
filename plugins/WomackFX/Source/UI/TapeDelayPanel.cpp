@@ -18,13 +18,42 @@ TapeDelayPanel::TapeDelayPanel (juce::AudioProcessorValueTreeState& apvts, TapeD
     setupKnob (satKnob);
     setupKnob (mixKnob);
 
+    auto setupLabel = [] (juce::Label& label)
+    {
+        label.setJustificationType (juce::Justification::centred);
+        label.setColour (juce::Label::textColourId, juce::Colours::white.withAlpha (0.8f));
+        label.setFont (juce::FontOptions (11.0f, juce::Font::bold));
+        label.setInterceptsMouseClicks (false, false);
+    };
+
+    setupLabel (timeLabel);
+    setupLabel (feedbackLabel);
+    setupLabel (modLabel);
+    setupLabel (satLabel);
+    setupLabel (mixLabel);
+    setupLabel (reelLabel);
+
     addAndMakeVisible (timeKnob);
     addAndMakeVisible (feedbackKnob);
     addAndMakeVisible (modKnob);
     addAndMakeVisible (satKnob);
     addAndMakeVisible (mixKnob);
+    addAndMakeVisible (timeLabel);
+    addAndMakeVisible (feedbackLabel);
+    addAndMakeVisible (modLabel);
+    addAndMakeVisible (satLabel);
+    addAndMakeVisible (mixLabel);
     addAndMakeVisible (enableBtn);
     addAndMakeVisible (reelViz);
+    addAndMakeVisible (reelLabel);
+
+    timeKnob.setTooltip ("Delay time in milliseconds.");
+    feedbackKnob.setTooltip ("Amount of delayed signal fed back into the repeats.");
+    modKnob.setTooltip ("Tape-style modulation depth applied to the repeats.");
+    satKnob.setTooltip ("Saturation applied to the delay line for tape character.");
+    mixKnob.setTooltip ("Blend between the dry signal and delayed signal.");
+    enableBtn.setTooltip ("Enable or bypass the tape delay effect.");
+    reelViz.setTooltip ("Animated tape-reel display reflecting the current delay movement.");
 
     timeAtt     = std::make_unique<SliderAttachment> (apvts, ParamIDs::delayTime,     timeKnob);
     feedbackAtt = std::make_unique<SliderAttachment> (apvts, ParamIDs::delayFeedback, feedbackKnob);
@@ -51,15 +80,23 @@ void TapeDelayPanel::resized()
     enableBtn.setBounds (topRow.removeFromLeft (80));
 
     auto vizArea = bounds.removeFromTop (bounds.getHeight() / 2);
+    reelLabel.setBounds (vizArea.removeFromTop (16));
     reelViz.setBounds (vizArea.reduced (4));
 
     auto knobRow = bounds;
     int knobW = knobRow.getWidth() / 5;
-    timeKnob.setBounds     (knobRow.removeFromLeft (knobW));
-    feedbackKnob.setBounds (knobRow.removeFromLeft (knobW));
-    modKnob.setBounds      (knobRow.removeFromLeft (knobW));
-    satKnob.setBounds      (knobRow.removeFromLeft (knobW));
-    mixKnob.setBounds      (knobRow);
+
+    auto layoutKnob = [] (juce::Rectangle<int> area, juce::Label& label, juce::Slider& knob)
+    {
+        label.setBounds (area.removeFromTop (16));
+        knob.setBounds (area);
+    };
+
+    layoutKnob (knobRow.removeFromLeft (knobW), timeLabel, timeKnob);
+    layoutKnob (knobRow.removeFromLeft (knobW), feedbackLabel, feedbackKnob);
+    layoutKnob (knobRow.removeFromLeft (knobW), modLabel, modKnob);
+    layoutKnob (knobRow.removeFromLeft (knobW), satLabel, satKnob);
+    layoutKnob (knobRow, mixLabel, mixKnob);
 }
 
 void TapeDelayPanel::TapeReelViz::paint (juce::Graphics& g)

@@ -26,6 +26,8 @@ private:
     TapeDelayEffect& delayEffect;
 
     juce::Slider timeKnob, feedbackKnob, modKnob, satKnob, mixKnob;
+	    juce::Label timeLabel { {}, "Time" }, feedbackLabel { {}, "Feedback" }, modLabel { {}, "Mod" }, satLabel { {}, "Sat" }, mixLabel { {}, "Mix" };
+	    juce::Label reelLabel { {}, "Reels" };
     juce::ToggleButton enableBtn { "DELAY" };
     TapeReelViz reelViz;
 
