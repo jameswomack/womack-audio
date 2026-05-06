@@ -13,7 +13,7 @@ mkdir -p "$RECORDINGS_DIR"
 OUTPUT="$RECORDINGS_DIR/${NAME}-${TIMESTAMP}.mkv"
 
 # Display index (0 = primary). Adjust if you have multiple monitors.
-DISPLAY_IDX=1
+DISPLAY_IDX=0
 
 # Audio device — must match the device name in Audio MIDI Setup.
 # After installing blackhole-2ch, create a Multi-Output Device named "BlackHole 2ch".
@@ -34,5 +34,5 @@ ffmpeg \
 
 FFMPEG_PID=$!
 echo "ffmpeg PID: $FFMPEG_PID"
-wait $FFMPEG_PID
+wait $FFMPEG_PID || true
 echo "Saved: $OUTPUT"

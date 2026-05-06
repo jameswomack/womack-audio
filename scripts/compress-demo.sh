@@ -23,6 +23,7 @@ ffmpeg -i "$INPUT" \
   -c:a aac \
   -b:a 192k \
   -movflags +faststart \
+  -y \
   "$OUTPUT"
 
 SIZE=$(du -sh "$OUTPUT" | cut -f1)
