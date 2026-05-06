@@ -9,37 +9,40 @@
 </p>
 
 <p align="center">
-  <strong>🔥 A vivid, tape-soaked open-source multi-effect plugin built with JUCE.</strong>
+  <strong>🔥 Maximum character.</strong>
 </p>
 
 <p align="center">
   Fuzz. Swirl. Echo. Glow.<br/>
-  <em>One signal chain. Three expressive effects. Maximum character.</em>
+  <em>Open-source multi-FX for guitars, synths, drums, and anything begging for more motion, grit, and tape color.</em>
 </p>
 
 <p align="center">
-  <img alt="C++20" src="https://img.shields.io/badge/C%2B%2B-20-00599C?style=for-the-badge&logo=c%2B%2B" />
-  <img alt="JUCE 8" src="https://img.shields.io/badge/JUCE-8-8DC63F?style=for-the-badge" />
-  <img alt="Formats" src="https://img.shields.io/badge/Formats-AU%20%7C%20VST3%20%7C%20Standalone-ff6b6b?style=for-the-badge" />
-  <img alt="macOS" src="https://img.shields.io/badge/Platform-macOS-111111?style=for-the-badge&logo=apple" />
-  <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-1f6feb?style=for-the-badge" />
+  <strong>FUZZ → UNIVIBE → TAPE DELAY</strong>
+</p>
+
+<p align="center">
+  <img alt="Built with C++20 and JUCE 8" src="https://img.shields.io/badge/Built%20with-C%2B%2B20%20%2B%20JUCE%208-1b2233?style=flat-square" />
+  <img alt="Formats AU, VST3, and Standalone" src="https://img.shields.io/badge/Formats-AU%20%7C%20VST3%20%7C%20Standalone-342a52?style=flat-square" />
+  <img alt="Platform macOS" src="https://img.shields.io/badge/Platform-macOS-111827?style=flat-square&logo=apple" />
+  <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-233047?style=flat-square" />
 </p>
 
 ---
 
-## What is Womack FX?
+## What it is
 
-**Womack FX** is an open-source multi-effect plugin that fuses three character-rich processors into one playable signal path:
+**Womack FX** is an open-source multi-effect plugin built around one vivid, playable signal chain:
 
 - **Fuzz** for grit, compression, and harmonic attitude
 - **Univibe-style modulation** for movement, wobble, and psychedelic shimmer
 - **Tape delay** for space, warmth, wow/flutter, and repeat decay
 
-The result is a compact, expressive plugin that feels like a small pedalboard with a cinematic streak.
+The result is a compact effects rig with a cinematic streak: immediate to use, colorful to hear, and distinctive enough to remember.
 
-It is built in public, designed to sound alive, and structured to be as interesting to explore in code as it is to use in a session.
+It is built in public, designed to sound alive, and structured so the code is just as enjoyable to explore as the plugin is to play.
 
-## At a glance
+## Quick facts
 
 - **Name:** Womack FX
 - **Type:** open-source audio multi-effect plugin
@@ -55,7 +58,7 @@ It is built in public, designed to sound alive, and structured to be as interest
 </p>
 
 <p align="center">
-  <em>The current Womack FX interface: three animated effect sections, colorful visualizers, and clearly labeled controls built for real use.</em>
+  <em>Three animated effect sections, colorful visualizers, and clearly labeled controls built to be played, not merely configured.</em>
 </p>
 
 ## Why it stands out

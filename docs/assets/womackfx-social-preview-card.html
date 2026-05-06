@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1280, initial-scale=1" />
+  <title>Womack FX Social Card</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      width: 1280px;
+      height: 640px;
+      overflow: hidden;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(circle at 14% 18%, rgba(255, 107, 107, .34), transparent 28%),
+        radial-gradient(circle at 86% 14%, rgba(87, 230, 255, .25), transparent 24%),
+        linear-gradient(135deg, #10091c 0%, #1a1030 46%, #0a1528 100%);
+      color: #f7f8ff;
+    }
+    .frame {
+      position: relative;
+      width: 1280px;
+      height: 640px;
+      padding: 44px;
+    }
+    .noise {
+      position: absolute;
+      inset: 0;
+      opacity: .06;
+      background-image:
+        linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: radial-gradient(circle at center, black 45%, transparent 88%);
+      pointer-events: none;
+    }
+    .topbar {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      z-index: 2;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .brand img {
+      width: 68px;
+      height: 68px;
+      filter: drop-shadow(0 10px 24px rgba(0, 0, 0, .35));
+    }
+    .brand-name {
+      font-size: 44px;
+      font-weight: 900;
+      letter-spacing: .05em;
+    }
+    .meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .pill {
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.07);
+      color: #dfe5f8;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: .06em;
+    }
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: .85fr 1.15fr;
+      gap: 18px;
+      align-items: end;
+      height: 500px;
+      z-index: 2;
+    }
+    .copy {
+      padding: 0 0 48px 6px;
+    }
+    .eyebrow {
+      margin-bottom: 16px;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      color: #ffdca8;
+    }
+    h1 {
+      margin: 0;
+      font-size: 88px;
+      line-height: .92;
+      letter-spacing: -.05em;
+      text-wrap: balance;
+    }
+    .sub {
+      margin-top: 18px;
+      font-size: 24px;
+      line-height: 1.22;
+      color: #ccd4ef;
+      max-width: 360px;
+    }
+    .shot-wrap {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .glow-a,
+    .glow-b {
+      position: absolute;
+      border-radius: 36px;
+      filter: blur(44px);
+    }
+    .glow-a {
+      right: 50px;
+      top: 90px;
+      width: 500px;
+      height: 360px;
+      background: rgba(255, 107, 107, .24);
+      transform: rotate(-8deg);
+    }
+    .glow-b {
+      right: 10px;
+      bottom: 52px;
+      width: 420px;
+      height: 260px;
+      background: rgba(87, 230, 255, .18);
+      transform: rotate(6deg);
+    }
+    .shot {
+      position: relative;
+      width: 760px;
+      height: 430px;
+      object-fit: cover;
+      object-position: center top;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 32px 70px rgba(0, 0, 0, .44);
+      transform: perspective(1500px) rotateY(-10deg) rotateX(2deg);
+    }
+    .footer {
+      position: absolute;
+      left: 50px;
+      right: 50px;
+      bottom: 26px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #b8c2de;
+      z-index: 2;
+    }
+    .signal { color: #ffe0b9; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <div class="noise"></div>
+    <section class="topbar">
+      <div class="brand">
+        <img src="womackfx-mark.svg" alt="Womack FX logo" />
+        <div class="brand-name">WOMACK FX</div>
+      </div>
+      <div class="meta">
+        <div class="pill">AU</div>
+        <div class="pill">VST3</div>
+        <div class="pill">STANDALONE</div>
+      </div>
+    </section>
+    <section class="hero">
+      <div class="copy">
+        <div class="eyebrow">OPEN-SOURCE MULTI-FX</div>
+        <h1>Maximum<br>character.</h1>
+        <div class="sub">Fuzz, motion, and tape color in one vivid chain.</div>
+      </div>
+      <div class="shot-wrap">
+        <div class="glow-a"></div>
+        <div class="glow-b"></div>
+        <img class="shot" src="womackfx-ui-screenshot.png" alt="Womack FX UI screenshot" />
+      </div>
+    </section>
+    <div class="footer">
+      <div class="signal">FUZZ → UNIVIBE → TAPE DELAY</div>
+      <div>github.com/jameswomack/womack-audio</div>
+    </div>
+  </main>
+</body>
+</html>
