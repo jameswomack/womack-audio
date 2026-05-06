@@ -15,6 +15,14 @@ BUILD_DIR="$REPO_ROOT/build"
 
 mkdir -p "$DIST_DIR" "$STAGING_DIR"
 
+# ── 0. Preflight: validate required env vars ───────────────────────────────
+for var in APPLE_ID APPLE_TEAM_ID APPLE_APP_PASSWORD INSTALLER_CERT_NAME APP_CERT_NAME; do
+    if [ -z "${!var:-}" ]; then
+        echo "Error: required environment variable $var is not set"
+        exit 1
+    fi
+done
+
 # ── 1. Build Release ───────────────────────────────────────────────────────
 echo "==> Building Release..."
 cmake -B "$BUILD_DIR" -G Xcode -S "$REPO_ROOT" -Wno-dev
@@ -26,6 +34,11 @@ VST3_SRC="$HOME/Library/Audio/Plug-Ins/VST3/Womack FX.vst3"
 
 if [ ! -d "$AU_SRC" ]; then
     echo "Error: AU component not found at $AU_SRC"
+    exit 1
+fi
+
+if [ ! -d "$VST3_SRC" ]; then
+    echo "Error: VST3 plugin not found at $VST3_SRC"
     exit 1
 fi
 
