@@ -1,0 +1,68 @@
+name: Build & Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build and Validate (macOS)
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout (with JUCE submodule)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Cache CMake build
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: cmake-${{ runner.os }}-${{ hashFiles('CMakeLists.txt', 'plugins/**/CMakeLists.txt') }}-${{ hashFiles('.gitmodules') }}
+          restore-keys: |
+            cmake-${{ runner.os }}-
+
+      - name: Configure CMake
+        run: cmake -B build -G Xcode -Wno-dev
+
+      - name: Build Release
+        run: cmake --build build --config Release
+
+      - name: Refresh AU registry
+        run: |
+          killall -9 AudioComponentRegistrar 2>/dev/null || true
+          sleep 2
+
+      - name: Validate with auval
+        run: auval -v aufx Wfx1 Wmck
+
+      - name: Download pluginval
+        run: |
+          curl -fsSL https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip \
+            -o /tmp/pluginval.zip
+          unzip -o /tmp/pluginval.zip -d /tmp/
+
+      - name: Validate AU with pluginval
+        run: |
+          /tmp/pluginval.app/Contents/MacOS/pluginval \
+            --strictness-level 5 \
+            --validate "$HOME/Library/Audio/Plug-Ins/Components/Womack FX.component"
+
+      - name: Validate VST3 with pluginval
+        run: |
+          /tmp/pluginval.app/Contents/MacOS/pluginval \
+            --strictness-level 5 \
+            --validate "$HOME/Library/Audio/Plug-Ins/VST3/Womack FX.vst3"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: WomackFX-plugins
+          path: |
+            ~/Library/Audio/Plug-Ins/Components/Womack FX.component
+            ~/Library/Audio/Plug-Ins/VST3/Womack FX.vst3
+          retention-days: 7
