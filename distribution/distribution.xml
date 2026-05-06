@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+    <title>Womack FX</title>
+    <welcome file="welcome.html" mime-type="text/html"/>
+    <license file="license.txt" mime-type="text/plain"/>
+    <options customize="never" require-scripts="false" rootVolumeOnly="true"/>
+    <domains enable_localSystem="true" enable_userHome="false"/>
+    <pkg-ref id="com.womack.womackfx.au" version="1.0.0" auth="Root">WomackFX-AU.pkg</pkg-ref>
+    <pkg-ref id="com.womack.womackfx.vst3" version="1.0.0" auth="Root">WomackFX-VST3.pkg</pkg-ref>
+    <choices-outline>
+        <line choice="com.womack.womackfx.au"/>
+        <line choice="com.womack.womackfx.vst3"/>
+    </choices-outline>
+    <choice id="com.womack.womackfx.au" title="Womack FX AU" description="Audio Unit for Logic Pro and GarageBand" selected="true">
+        <pkg-ref id="com.womack.womackfx.au"/>
+    </choice>
+    <choice id="com.womack.womackfx.vst3" title="Womack FX VST3" description="VST3 for Ableton Live, Reaper, and others" selected="true">
+        <pkg-ref id="com.womack.womackfx.vst3"/>
+    </choice>
+</installer-gui-script>
