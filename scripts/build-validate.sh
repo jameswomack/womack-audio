@@ -11,12 +11,12 @@ echo "==> cmake configure"
 cmake -B "$BUILD_DIR" -G Xcode -S "$REPO_ROOT" -Wno-dev
 
 echo "==> cmake build (Release)"
-cmake --build "$BUILD_DIR" --config Release 2>&1
+cmake --build "$BUILD_DIR" --config Release
 
 # ── Kill AU cache so macOS picks up fresh copy ─────────────────────────────
 echo "==> refreshing AU cache"
 killall -9 AudioComponentRegistrar 2>/dev/null || true
-sleep 1
+sleep 2
 
 # ── auval ──────────────────────────────────────────────────────────────────
 echo "==> auval"
@@ -28,10 +28,11 @@ else
 fi
 
 # ── pluginval ─────────────────────────────────────────────────────────────
-if [ ! -f "$PLUGINVAL_BIN" ]; then
+if [ ! -x "$PLUGINVAL_BIN" ]; then
     echo "==> downloading pluginval"
     curl -fsSL "$PLUGINVAL_URL" -o /tmp/pluginval.zip
     unzip -o /tmp/pluginval.zip -d /tmp/ > /dev/null
+    [ -x "$PLUGINVAL_BIN" ] || { echo "[ERROR] pluginval binary not found or not executable after extraction"; exit 1; }
 fi
 
 AU_PATH="$HOME/Library/Audio/Plug-Ins/Components/Womack FX.component"
