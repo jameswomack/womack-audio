@@ -2,7 +2,6 @@
 <installer-gui-script minSpecVersion="2">
     <title>Womack FX</title>
     <welcome file="welcome.html" mime-type="text/html"/>
-    <license file="license.txt" mime-type="text/plain"/>
     <options customize="never" require-scripts="false" rootVolumeOnly="true"/>
     <domains enable_localSystem="true" enable_userHome="false"/>
     <pkg-ref id="com.womack.womackfx.au" version="1.0.0" auth="Root">WomackFX-AU.pkg</pkg-ref>
