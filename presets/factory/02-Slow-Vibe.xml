@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Parameters fuzzEnabled="0" fuzzDrive="5.0" fuzzTone="4000.0" fuzzMix="1.0" fuzzType="0"
+            vibeEnabled="1" vibeRate="0.4" vibeDepth="0.85" vibeFeedback="0.5" vibeMix="0.9"
+            delayEnabled="0" delayTime="350.0" delayFeedback="0.4" delayMod="0.3" delaySat="0.3" delayMix="0.5"/>
