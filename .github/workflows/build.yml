@@ -44,6 +44,7 @@ jobs:
           curl -fsSL https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip \
             -o /tmp/pluginval.zip
           unzip -o /tmp/pluginval.zip -d /tmp/
+          test -x /tmp/pluginval.app/Contents/MacOS/pluginval
 
       - name: Validate AU with pluginval
         run: |
