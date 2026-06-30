@@ -3,6 +3,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "../PluginProcessor.h"
 #include "../Parameters.h"
+#include "ResponseCurve.h"
 
 class ResonotePanel : public juce::Component,
                       public juce::Timer
@@ -29,6 +30,7 @@ private:
                    outLabel  { {}, "Output" },
                    modeLabel { {}, "Mode" };
     juce::Label    noteReadout;   // big "A4  +3 c" display
+    ResponseCurve  responseCurve;
     juce::ToggleButton snapBtn { "SNAP" };
     juce::ToggleButton midiBtn { "MIDI" };
 

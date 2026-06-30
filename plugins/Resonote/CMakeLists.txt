@@ -18,7 +18,8 @@ target_sources(Resonote
         Source/PluginEditor.cpp
         Source/DSP/ResonantSVF.cpp
         Source/UI/Visualizer.cpp
-        Source/UI/ResonotePanel.cpp)
+        Source/UI/ResonotePanel.cpp
+        Source/UI/ResponseCurve.cpp)
 
 target_compile_definitions(Resonote
     PUBLIC

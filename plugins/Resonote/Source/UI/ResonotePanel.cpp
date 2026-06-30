@@ -2,7 +2,8 @@
 #include "../DSP/NoteFrequency.h"
 
 ResonotePanel::ResonotePanel (ResonoteProcessor& processor)
-    : proc (processor)
+    : proc (processor),
+      responseCurve (processor)
 {
     auto& apvts = proc.getAPVTS();
 
@@ -43,6 +44,9 @@ ResonotePanel::ResonotePanel (ResonoteProcessor& processor)
     noteReadout.setFont (juce::FontOptions (28.0f, juce::Font::bold));
     noteReadout.setInterceptsMouseClicks (false, false);
     addAndMakeVisible (noteReadout);
+
+    addAndMakeVisible (responseCurve);
+    responseCurve.setTooltip ("Filter response over a log-frequency axis with note gridlines; the orange marker is the locked note.");
 
     modeSelector.addItemList ({ "Bell", "Low-Pass", "High-Pass" }, 1);
     addAndMakeVisible (modeSelector);
@@ -122,6 +126,7 @@ void ResonotePanel::resized()
 
     auto vizArea = bounds.removeFromTop (bounds.getHeight() / 2);
     noteReadout.setBounds (vizArea.removeFromBottom (40));
+    responseCurve.setBounds (vizArea.reduced (2));
 
     auto knobRow = bounds;
     const int knobW = knobRow.getWidth() / 4;
