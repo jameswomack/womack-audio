@@ -1,5 +1,6 @@
 #include <juce_core/juce_core.h>
 #include "../Source/DSP/NoteFrequency.h"
+#include "../Source/DSP/ResonantSVF.h"
 
 class NoteFrequencyTests : public juce::UnitTest
 {
@@ -41,6 +42,72 @@ public:
 };
 
 static NoteFrequencyTests noteFrequencyTests;
+
+class ResonantSVFTests : public juce::UnitTest
+{
+public:
+    ResonantSVFTests() : juce::UnitTest ("ResonantSVF") {}
+
+    void runTest() override
+    {
+        beginTest ("stable & finite at max resonance, all modes");
+
+        const ResonantSVF::Mode modes[] = { ResonantSVF::Mode::bell,
+                                             ResonantSVF::Mode::lowpass,
+                                             ResonantSVF::Mode::highpass };
+
+        for (auto mode : modes)
+        {
+            ResonantSVF svf;
+            juce::dsp::ProcessSpec spec { 48000.0, 512, 1 };
+            svf.prepare (spec);
+            svf.setMode (mode);
+            svf.setFrequency (1000.0f);
+            svf.setResonance (1.0f);
+            svf.setGainDb (12.0f);
+
+            juce::AudioBuffer<float> buffer (1, 512);
+            juce::Random rng (1234);
+            bool ok = true;
+
+            for (int blk = 0; blk < 400; ++blk)
+            {
+                for (int n = 0; n < 512; ++n)
+                    buffer.setSample (0, n, rng.nextFloat() * 2.0f - 1.0f);
+
+                juce::dsp::AudioBlock<float> block (buffer);
+                svf.process (block);
+
+                for (int n = 0; n < 512; ++n)
+                {
+                    const float s = buffer.getSample (0, n);
+                    if (! std::isfinite (s) || std::abs (s) > 100.0f)
+                        ok = false;
+                }
+            }
+            expect (ok);
+        }
+
+        beginTest ("magnitudeAt peaks near cutoff for low-pass");
+        {
+            ResonantSVF svf;
+            juce::dsp::ProcessSpec spec { 48000.0, 512, 1 };
+            svf.prepare (spec);
+            svf.setMode (ResonantSVF::Mode::lowpass);
+            svf.setFrequency (1000.0f);
+            svf.setResonance (0.9f);
+            juce::AudioBuffer<float> silence (1, 512);
+            silence.clear();
+            for (int i = 0; i < 8; ++i) { juce::dsp::AudioBlock<float> b (silence); svf.process (b); }
+
+            const float atCutoff = svf.magnitudeAt (1000.0f);
+            const float wayAbove = svf.magnitudeAt (8000.0f);
+            expect (atCutoff > wayAbove);
+        }
+    }
+};
+
+static ResonantSVFTests resonantSVFTests;
 
 int main()
 {

@@ -4,7 +4,8 @@ juce_add_console_app(ResonoteTests
 
 target_sources(ResonoteTests
     PRIVATE
-        Tests/NoteFrequencyTests.cpp)
+        Tests/NoteFrequencyTests.cpp
+        Source/DSP/ResonantSVF.cpp)
 
 target_compile_definitions(ResonoteTests
     PRIVATE
