@@ -124,6 +124,8 @@ float ResonantSVF::magnitudeFor (float hz, float fc, float r01, float gainDb, Mo
 }
 
 // Analog-prototype magnitude; accurate well below Nyquist (UI response curve only).
+// Instance variant reads the live SmoothedValues — call only from the audio thread.
+// UI code must use the static magnitudeFor() with atomic snapshots instead.
 float ResonantSVF::magnitudeAt (float hz) const noexcept
 {
     return magnitudeFor (hz, freqSmoothed.getCurrentValue(), resSmoothed.getCurrentValue(),
