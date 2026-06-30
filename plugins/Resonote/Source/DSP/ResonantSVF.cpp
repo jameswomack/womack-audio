@@ -46,6 +46,8 @@ void ResonantSVF::process (juce::dsp::AudioBlock<float>& block) noexcept
             k = 1.0f / Q;
 
             const float A = std::pow (10.0f, db / 40.0f);   // only needed/used for bell
+            // Cytomic TPT peaking form: out = v0 + (A^2 - 1)/Q * band (the 1/Q factor
+            // is required for a true center gain of A^2 = 10^(dB/20); not the literal spec formula).
             bellScale = (A * A - 1.0f) * k;
 
             float g = std::tan (juce::MathConstants<float>::pi * fc / (float) sampleRate);
