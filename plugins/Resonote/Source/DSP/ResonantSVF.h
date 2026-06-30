@@ -18,7 +18,7 @@ public:
     void setMode (Mode m) noexcept        { mode = m; }
     void setFrequency (float hz) noexcept { freqSmoothed.setTargetValue (juce::jlimit (20.0f, 20000.0f, hz)); }
     void setResonance (float r01) noexcept{ resSmoothed.setTargetValue  (juce::jlimit (0.0f, 1.0f, r01)); }
-    void setGainDb (float db) noexcept    { gainSmoothed.setTargetValue (db); }
+    void setGainDb (float db) noexcept    { gainSmoothed.setTargetValue (db); } // range enforced by the APVTS "gain" parameter (±24 dB)
 
     void process (juce::dsp::AudioBlock<float>& block) noexcept;
 
@@ -36,5 +36,5 @@ private:
     juce::SmoothedValue<float> gainSmoothed { 0.0f };
 
     struct State { float ic1eq = 0.0f, ic2eq = 0.0f; };
-    std::array<State, 2> chState;
+    std::array<State, 2> chState; // stereo maximum
 };

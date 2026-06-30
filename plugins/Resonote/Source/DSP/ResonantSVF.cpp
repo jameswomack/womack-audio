@@ -20,8 +20,17 @@ void ResonantSVF::reset()
 
 void ResonantSVF::process (juce::dsp::AudioBlock<float>& block) noexcept
 {
-    const auto numCh      = juce::jmin ((size_t) chState.size(), block.getNumChannels());
+    const auto numCh      = juce::jmin (chState.size(), block.getNumChannels());
     const auto numSamples = block.getNumSamples();
+    jassert (block.getNumChannels() <= chState.size());
+
+    std::array<float*, 2> ptrs {};
+    for (size_t ch = 0; ch < numCh; ++ch)
+        ptrs[ch] = block.getChannelPointer (ch);
+
+    // sentinels force a compute on the first sample
+    float lastFc = -1.0f, lastR = -1.0f, lastDb = -1000.0f;
+    float k = 0.0f, a1 = 0.0f, a2 = 0.0f, a3 = 0.0f, satDrive = 1.0f, bellScale = 0.0f;
 
     for (size_t i = 0; i < numSamples; ++i)
     {
@@ -29,23 +38,29 @@ void ResonantSVF::process (juce::dsp::AudioBlock<float>& block) noexcept
         const float r  = resSmoothed.getNextValue();
         const float db = gainSmoothed.getNextValue();
 
-        const float Q = resonanceToQ (r);
-        const float k = 1.0f / Q;
-        const float A = std::pow (10.0f, db / 40.0f);
+        if (fc != lastFc || r != lastR || db != lastDb)   // recompute only on change
+        {
+            lastFc = fc; lastR = r; lastDb = db;
 
-        float g = std::tan (juce::MathConstants<float>::pi * fc / (float) sampleRate);
-        g = juce::jlimit (0.0f, 100.0f, g);
+            const float Q = resonanceToQ (r);
+            k = 1.0f / Q;
 
-        const float a1 = 1.0f / (1.0f + g * (g + k));
-        const float a2 = g * a1;
-        const float a3 = g * a2;
+            const float A = std::pow (10.0f, db / 40.0f);   // only needed/used for bell
+            bellScale = (A * A - 1.0f) * k;
 
-        const float satDrive = 1.0f + r * 3.0f;   // warmth scales with resonance
+            float g = std::tan (juce::MathConstants<float>::pi * fc / (float) sampleRate);
+            g = juce::jlimit (0.0f, 100.0f, g);
+            a1 = 1.0f / (1.0f + g * (g + k));
+            a2 = g * a1;
+            a3 = g * a2;
+
+            satDrive = 1.0f + r * 3.0f;   // warmth scales with resonance
+        }
 
         for (size_t ch = 0; ch < numCh; ++ch)
         {
             auto& st    = chState[ch];
-            float* data = block.getChannelPointer (ch);
+            float* data = ptrs[ch];
             const float v0 = data[i];
 
             float v3 = v0 - st.ic2eq;
@@ -67,7 +82,7 @@ void ResonantSVF::process (juce::dsp::AudioBlock<float>& block) noexcept
                 case Mode::lowpass:  out = low;  break;
                 case Mode::highpass: out = high; break;
                 case Mode::bell:
-                default:             out = v0 + (A * A - 1.0f) * k * band; break;
+                default:             out = v0 + bellScale * band; break;
             }
 
             if (! std::isfinite (out))
@@ -84,6 +99,7 @@ void ResonantSVF::process (juce::dsp::AudioBlock<float>& block) noexcept
 
 float ResonantSVF::magnitudeAt (float hz) const noexcept
 {
+    // Analog-prototype magnitude; accurate well below Nyquist (UI response curve only).
     const float fc = juce::jmax (1.0f, freqSmoothed.getCurrentValue());
     const float Q  = resonanceToQ (resSmoothed.getCurrentValue());
     const float A  = std::pow (10.0f, gainSmoothed.getCurrentValue() / 40.0f);
