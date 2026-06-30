@@ -60,6 +60,7 @@ void ResonoteProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 
     svf.prepare (spec);
     lastMidiNote = -1;
+    lastOutputGain = juce::Decibels::decibelsToGain (outputParam->load());
 }
 
 bool ResonoteProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -104,17 +105,26 @@ void ResonoteProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
             freq = (float) NoteFrequency::snapToNote (freq);
     }
 
-    currentFreqHz.store (freq);
+    const int   modeIdx = (int) modeParam->load();
+    const float resVal  = resParam->load();
+    const float gainVal = gainParam->load();
 
-    svf.setMode (static_cast<ResonantSVF::Mode> ((int) modeParam->load()));
+    currentFreqHz.store (freq);
+    currentRes.store (resVal);
+    currentGainDb.store (gainVal);
+    currentMode.store (modeIdx);
+
+    svf.setMode (static_cast<ResonantSVF::Mode> (modeIdx));
     svf.setFrequency (freq);
-    svf.setResonance (resParam->load());
-    svf.setGainDb (gainParam->load());
+    svf.setResonance (resVal);
+    svf.setGainDb (gainVal);
 
     juce::dsp::AudioBlock<float> block (buffer);
     svf.process (block);
 
-    block.multiplyBy (juce::Decibels::decibelsToGain (outputParam->load()));
+    const float newOutputGain = juce::Decibels::decibelsToGain (outputParam->load());
+    buffer.applyGainRamp (0, buffer.getNumSamples(), lastOutputGain, newOutputGain);
+    lastOutputGain = newOutputGain;
 }
 
 void ResonoteProcessor::getStateInformation (juce::MemoryBlock& destData)

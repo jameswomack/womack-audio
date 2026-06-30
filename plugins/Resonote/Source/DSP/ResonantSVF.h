@@ -25,6 +25,9 @@ public:
     /** Linear analog magnitude (gain) at hz for current settings. UI only. */
     float magnitudeAt (float hz) const noexcept;
 
+    /** Pure linear analog magnitude for explicit settings (UI only, thread-safe). */
+    static float magnitudeFor (float hz, float fc, float r01, float gainDb, Mode mode) noexcept;
+
 private:
     static float resonanceToQ (float r01) noexcept { return 0.5f + r01 * r01 * 19.5f; }
 

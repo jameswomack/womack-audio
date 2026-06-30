@@ -97,15 +97,14 @@ void ResonantSVF::process (juce::dsp::AudioBlock<float>& block) noexcept
     }
 }
 
-float ResonantSVF::magnitudeAt (float hz) const noexcept
+float ResonantSVF::magnitudeFor (float hz, float fc, float r01, float gainDb, Mode mode) noexcept
 {
-    // Analog-prototype magnitude; accurate well below Nyquist (UI response curve only).
-    const float fc = juce::jmax (1.0f, freqSmoothed.getCurrentValue());
-    const float Q  = resonanceToQ (resSmoothed.getCurrentValue());
-    const float A  = std::pow (10.0f, gainSmoothed.getCurrentValue() / 40.0f);
+    fc = juce::jmax (1.0f, fc);
+    const float Q = resonanceToQ (r01);
+    const float A = std::pow (10.0f, gainDb / 40.0f);
 
-    const float wn  = hz / fc;
-    const float wn2 = wn * wn;
+    const float wn   = hz / fc;
+    const float wn2  = wn * wn;
     const float base = (1.0f - wn2) * (1.0f - wn2);
 
     switch (mode)
@@ -122,4 +121,11 @@ float ResonantSVF::magnitudeAt (float hz) const noexcept
             return std::sqrt (num / den);
         }
     }
+}
+
+// Analog-prototype magnitude; accurate well below Nyquist (UI response curve only).
+float ResonantSVF::magnitudeAt (float hz) const noexcept
+{
+    return magnitudeFor (hz, freqSmoothed.getCurrentValue(), resSmoothed.getCurrentValue(),
+                         gainSmoothed.getCurrentValue(), mode);
 }

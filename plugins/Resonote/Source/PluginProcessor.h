@@ -39,8 +39,13 @@ public:
     /** Most-recently-applied filter frequency (post snap / MIDI). UI readout. */
     float getCurrentFrequencyHz() const noexcept { return currentFreqHz.load(); }
 
-    /** Linear magnitude of the live filter at hz. UI response curve. */
-    float getMagnitudeAt (float hz) const noexcept { return svf.magnitudeAt (hz); }
+    /** Linear magnitude of the live filter at hz. UI response curve. Thread-safe. */
+    float getMagnitudeAt (float hz) const noexcept
+    {
+        return ResonantSVF::magnitudeFor (hz, currentFreqHz.load(), currentRes.load(),
+                                          currentGainDb.load(),
+                                          static_cast<ResonantSVF::Mode> (currentMode.load()));
+    }
 
 private:
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
@@ -58,6 +63,10 @@ private:
 
     int lastMidiNote = -1;
     std::atomic<float> currentFreqHz { 220.0f };
+    std::atomic<float> currentRes    { 0.3f };
+    std::atomic<float> currentGainDb { 0.0f };
+    std::atomic<int>   currentMode   { 1 };
+    float lastOutputGain = 1.0f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ResonoteProcessor)
 };
