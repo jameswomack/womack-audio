@@ -18,6 +18,9 @@ public:
 private:
     ResonoteProcessor& proc;
 
+    std::atomic<float>* modeParam      = nullptr;
+    std::atomic<float>* midiTrackParam = nullptr;
+
     juce::ComboBox modeSelector;
     juce::Slider   freqKnob, resKnob, gainKnob, outKnob;
     juce::Label    freqLabel { {}, "Frequency" },

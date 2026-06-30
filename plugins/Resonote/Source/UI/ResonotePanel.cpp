@@ -6,6 +6,9 @@ ResonotePanel::ResonotePanel (ResonoteProcessor& processor)
 {
     auto& apvts = proc.getAPVTS();
 
+    modeParam      = apvts.getRawParameterValue (ParamIDs::mode);
+    midiTrackParam = apvts.getRawParameterValue (ParamIDs::midiTrack);
+
     auto setupKnob = [this] (juce::Slider& s, const juce::String& suffix = "")
     {
         s.setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
@@ -80,12 +83,19 @@ void ResonotePanel::timerCallback()
     txt << "   " << (cents >= 0.0 ? "+" : "") << juce::String (cents, 0) << " c";
     noteReadout.setText (txt, juce::dontSendNotification);
 
-    const bool isBell = (int) *proc.getAPVTS().getRawParameterValue (ParamIDs::mode) == 0;
-    gainKnob.setEnabled (isBell);
-    gainLabel.setEnabled (isBell);
+    const bool isBell = (int) modeParam->load() == 0;
+    if (gainKnob.isEnabled() != isBell)
+    {
+        gainKnob.setEnabled (isBell);
+        gainLabel.setEnabled (isBell);
+    }
 
-    const bool midiOn = *proc.getAPVTS().getRawParameterValue (ParamIDs::midiTrack) > 0.5f;
-    freqKnob.setEnabled (! midiOn);
+    const bool midiOn = midiTrackParam->load() > 0.5f;
+    if (freqKnob.isEnabled() == midiOn)   // state changed
+    {
+        freqKnob.setEnabled  (! midiOn);
+        freqLabel.setEnabled (! midiOn);
+    }
 }
 
 void ResonotePanel::paint (juce::Graphics& g)
