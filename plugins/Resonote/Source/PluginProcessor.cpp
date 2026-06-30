@@ -1,6 +1,7 @@
 #include "PluginProcessor.h"
 #include "Parameters.h"
 #include "DSP/NoteFrequency.h"
+#include "PluginEditor.h"
 
 ResonoteProcessor::ResonoteProcessor()
     : AudioProcessor (BusesProperties()
@@ -132,7 +133,7 @@ void ResonoteProcessor::setStateInformation (const void* data, int sizeInBytes)
 
 juce::AudioProcessorEditor* ResonoteProcessor::createEditor()
 {
-    return new juce::GenericAudioProcessorEditor (*this);
+    return new ResonoteEditor (*this);
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()

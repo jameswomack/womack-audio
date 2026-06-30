@@ -15,7 +15,10 @@ juce_add_plugin(Resonote
 target_sources(Resonote
     PRIVATE
         Source/PluginProcessor.cpp
-        Source/DSP/ResonantSVF.cpp)
+        Source/PluginEditor.cpp
+        Source/DSP/ResonantSVF.cpp
+        Source/UI/Visualizer.cpp
+        Source/UI/ResonotePanel.cpp)
 
 target_compile_definitions(Resonote
     PUBLIC
