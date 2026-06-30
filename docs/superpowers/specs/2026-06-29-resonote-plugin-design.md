@@ -44,7 +44,7 @@ plugins/Resonote/
   Tests/NoteFrequencyTests.cpp
 ```
 
-- AU codes: manufacturer `Wmck` (suite-consistent), plugin `Rnt1`, type `aufx`.
+- AU codes: manufacturer `Wmck` (suite-consistent), plugin `Rnt1`, type `aumf` (Music Effect — JUCE selects `kAudioUnitType_MusicEffect` because `NEEDS_MIDI_INPUT TRUE`).
 - Formats: AU / VST3 / Standalone, auto-copy to `~/Library/Audio/Plug-Ins/` on build,
   matching `WomackFX`.
 - Registered via `plugins/CMakeLists.txt` (`add_subdirectory(Resonote)`).
@@ -91,7 +91,7 @@ plugins/Resonote/
 - **NoteFrequency** unit tests (pure math: note↔Hz, nearest-note, cents, snap edge cases)
   via JUCE `UnitTest`, run from a small `Tests` target.
 - DSP smoke checks: impulse in → finite out; stable at max resonance; no NaN.
-- `auval -v aufx Rnt1 Wmck` + pluginval, matching the suite's CI.
+- `auval -v aumf Rnt1 Wmck` + pluginval, matching the suite's CI.
 
 ## Out of Scope (v1 / future)
 

@@ -811,7 +811,7 @@ target_link_libraries(ResonoteTests
 cmake -B build -G Xcode
 cmake --build build --config Release --target Resonote_All
 killall -9 AudioComponentRegistrar 2>/dev/null
-auval -v aufx Rnt1 Wmck
+auval -v aumf Rnt1 Wmck  # aumf = Music Effect; JUCE selects kAudioUnitType_MusicEffect because NEEDS_MIDI_INPUT TRUE
 ```
 Expected: build succeeds; `auval` ends with "AU VALIDATION SUCCEEDED".
 
@@ -1154,7 +1154,7 @@ target_sources(Resonote
 cmake -B build -G Xcode
 cmake --build build --config Release --target Resonote_All
 killall -9 AudioComponentRegistrar 2>/dev/null
-auval -v aufx Rnt1 Wmck
+auval -v aumf Rnt1 Wmck  # aumf = Music Effect; JUCE selects kAudioUnitType_MusicEffect because NEEDS_MIDI_INPUT TRUE
 ```
 Expected: build succeeds; `auval` ends with "AU VALIDATION SUCCEEDED".
 
@@ -1348,7 +1348,7 @@ target_sources(Resonote
 cmake -B build -G Xcode
 cmake --build build --config Release --target Resonote_All
 killall -9 AudioComponentRegistrar 2>/dev/null
-auval -v aufx Rnt1 Wmck
+auval -v aumf Rnt1 Wmck  # aumf = Music Effect; JUCE selects kAudioUnitType_MusicEffect because NEEDS_MIDI_INPUT TRUE
 ```
 Expected: build succeeds; `auval` ends with "AU VALIDATION SUCCEEDED".
 
@@ -1396,7 +1396,7 @@ Expected: `exit=0`.
 
 ```bash
 killall -9 AudioComponentRegistrar 2>/dev/null
-auval -v aufx Rnt1 Wmck
+auval -v aumf Rnt1 Wmck  # aumf = Music Effect; JUCE selects kAudioUnitType_MusicEffect because NEEDS_MIDI_INPUT TRUE
 ```
 Expected: "AU VALIDATION SUCCEEDED".
 

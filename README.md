@@ -42,6 +42,11 @@ The result is a compact effects rig with a cinematic streak: immediate to use, c
 
 It is built in public, designed to sound alive, and structured so the code is just as enjoyable to explore as the plugin is to play.
 
+## Plugin suite
+
+- **Womack FX** — multi-effect signal chain (Fuzz → Univibe → Tape Delay) with animated visualizers
+- **Womack Resonote** — single-band note-aware resonant filter (Bell / Low-Pass / High-Pass) with a warm nonlinear core, snap-to-note, and MIDI pitch tracking
+
 ## Quick facts
 
 - **Name:** Womack FX
