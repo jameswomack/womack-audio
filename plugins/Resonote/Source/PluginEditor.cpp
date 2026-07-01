@@ -9,7 +9,10 @@ ResonoteEditor::ResonoteEditor (ResonoteProcessor& p)
     glContext.attachTo (*this);
     addAndMakeVisible (mainPanel);
     tooltipWindow.toFront (false);
-    setSize (720, 400);
+
+    setResizable (true, true);
+    setResizeLimits (600, 380, 1600, 1100);
+    setSize (760, 480);
 }
 
 ResonoteEditor::~ResonoteEditor()

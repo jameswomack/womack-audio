@@ -3,8 +3,10 @@
 #include "Visualizer.h"
 #include "../PluginProcessor.h"
 
-/** Log-frequency response curve with faint vertical note gridlines and a
-    marker at the current cutoff labelled with its locked note. */
+/** Log-frequency response curve rendered through a "convex glass" lens: a
+    horizontal fisheye magnifies the notes around the current cutoff and a subtle
+    vertical bow lifts the center toward the viewer. Faint note gridlines recede
+    with distance; an orange marker sits on the locked note. */
 class ResponseCurve : public Visualizer
 {
 public:
@@ -15,8 +17,6 @@ public:
 private:
     static constexpr float minHz = 20.0f;
     static constexpr float maxHz = 20000.0f;
-
-    static float hzToX (float hz, juce::Rectangle<float> area) noexcept;
 
     ResonoteProcessor& proc;
 };

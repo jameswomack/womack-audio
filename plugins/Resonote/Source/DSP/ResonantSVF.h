@@ -29,7 +29,9 @@ public:
     static float magnitudeFor (float hz, float fc, float r01, float gainDb, Mode mode) noexcept;
 
 private:
-    static float resonanceToQ (float r01) noexcept { return 0.5f + r01 * r01 * 19.5f; }
+    // Max Q ~75: much harder/sharper resonance. The tanh feedback keeps it stable
+    // (the linear TPT is unconditionally stable for k>0), so it never self-oscillates.
+    static float resonanceToQ (float r01) noexcept { return 0.5f + r01 * r01 * 74.5f; }
 
     double sampleRate = 44100.0;
     Mode   mode = Mode::lowpass;
