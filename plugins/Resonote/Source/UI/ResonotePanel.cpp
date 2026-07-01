@@ -65,7 +65,7 @@ ResonotePanel::ResonotePanel (ResonoteProcessor& processor)
     gainKnob.setTooltip ("Boost or cut at the center frequency (Bell mode only).");
     outKnob.setTooltip  ("Output level trim.");
     modeSelector.setTooltip ("Filter shape: Bell, Low-Pass, or High-Pass.");
-    snapBtn.setTooltip ("Snap the frequency to the nearest chromatic note.");
+    snapBtn.setTooltip ("Snap the frequency to the nearest note in the selected scale.");
     midiBtn.setTooltip ("Let incoming MIDI notes set the frequency (last note wins).");
     rootSelector.setTooltip ("Root note of the snap scale.");
     scaleSelector.setTooltip ("Scale that SNAP quantizes the frequency to.");

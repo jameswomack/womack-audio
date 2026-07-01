@@ -55,17 +55,25 @@ public:
         // Chromatic path matches snapToNote
         expectWithinAbsoluteError (NoteFrequency::snapToScale (445.0, 0, NoteFrequency::Scale::chromatic),
                                    NoteFrequency::snapToNote (445.0), 1.0e-6);
-        // In C major, C#5 (~554.4 Hz) is out of key; nearest in-key note is C5 or D5.
+        // In C major, C#5 (midi 73) is out of key and exactly equidistant from
+        // C5 (72) and D5 (74); the ascending search resolves ties to the lower note.
         {
-            const double cSharp5 = NoteFrequency::midiToHz (73); // C#5
+            const double cSharp5 = NoteFrequency::midiToHz (73);
             const double snapped = NoteFrequency::snapToScale (cSharp5, 0, NoteFrequency::Scale::major);
-            const int    snappedMidi = NoteFrequency::nearestMidi (snapped);
-            expect (snappedMidi == 72 || snappedMidi == 74);     // C5 or D5, never C#5
-            expect (NoteFrequency::inScale (snappedMidi, 0, NoteFrequency::Scale::major));
+            expect (NoteFrequency::nearestMidi (snapped) == 72);  // C5 (lower note wins on a tie)
         }
         // An in-key note snaps to itself (F4 in C major)
         expectWithinAbsoluteError (NoteFrequency::snapToScale (NoteFrequency::midiToHz (65), 0, NoteFrequency::Scale::major),
                                    NoteFrequency::midiToHz (65), 1.0e-6);
+        // Root-relative snapping: D#4 (midi 63) is out of A natural minor; nearest
+        // in-key notes are D4 (62) and E4 (64), tie resolves to D4.
+        {
+            const double dSharp4 = NoteFrequency::midiToHz (63);
+            const double snapped = NoteFrequency::snapToScale (dSharp4, 9, NoteFrequency::Scale::minor);
+            const int    snappedMidi = NoteFrequency::nearestMidi (snapped);
+            expect (snappedMidi == 62);
+            expect (NoteFrequency::inScale (snappedMidi, 9, NoteFrequency::Scale::minor));
+        }
     }
 };
 
