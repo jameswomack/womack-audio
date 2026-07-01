@@ -1,5 +1,6 @@
 #include "UnivibePanel.h"
 #include "../Parameters.h"
+#include "../../../Shared/UI/WomackSkin.h"
 
 UnivibePanel::UnivibePanel (juce::AudioProcessorValueTreeState& apvts, UnivibeEffect& vibe)
     : vibeEffect (vibe), rotorViz (vibe)
@@ -59,11 +60,7 @@ UnivibePanel::UnivibePanel (juce::AudioProcessorValueTreeState& apvts, UnivibeEf
 
 void UnivibePanel::paint (juce::Graphics& g)
 {
-    g.setColour (juce::Colour (0xff1a1a1a));
-    g.fillRoundedRectangle (getLocalBounds().toFloat(), 8.0f);
-
-    g.setColour (juce::Colour (0xff33aa88));
-    g.drawRoundedRectangle (getLocalBounds().toFloat().reduced (1.0f), 8.0f, 1.5f);
+    WomackSkin::paintPanelShell (g, getLocalBounds().toFloat(), WomackSkin::accentTeal());
 }
 
 void UnivibePanel::resized()
@@ -94,9 +91,10 @@ void UnivibePanel::resized()
 
 void UnivibePanel::RotorViz::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colour (0xff0d0d0d));
+    auto frame = getLocalBounds().toFloat().reduced (1.0f);
+    WomackSkin::paintDisplayWell (g, frame, WomackSkin::accentTeal());
 
-    auto bounds = getLocalBounds().toFloat().reduced (8.0f);
+    auto bounds = frame.reduced (12.0f);
     float cx = bounds.getCentreX();
     float cy = bounds.getCentreY();
     float radius = juce::jmin (bounds.getWidth(), bounds.getHeight()) * 0.4f;
@@ -116,13 +114,13 @@ void UnivibePanel::RotorViz::paint (juce::Graphics& g)
         float x2 = cx - std::cos (angle) * radius * 0.85f;
         float y2 = cy - std::sin (angle) * radius * 0.85f;
 
-        juce::ColourGradient grad (juce::Colour (0xff33aa88).withAlpha (0.8f), cx, cy,
-                                    juce::Colour (0xff33aa88).withAlpha (0.1f), x1, y1, true);
+        juce::ColourGradient grad (WomackSkin::accentTeal().withAlpha (0.8f), cx, cy,
+                                    WomackSkin::accentTeal().withAlpha (0.1f), x1, y1, true);
         g.setGradientFill (grad);
         g.drawLine (x1, y1, x2, y2, 3.0f);
     }
 
     // Center dot
-    g.setColour (juce::Colour (0xff33aa88));
+    g.setColour (WomackSkin::accentTeal());
     g.fillEllipse (cx - 3, cy - 3, 6, 6);
 }

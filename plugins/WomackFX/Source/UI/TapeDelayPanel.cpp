@@ -1,5 +1,6 @@
 #include "TapeDelayPanel.h"
 #include "../Parameters.h"
+#include "../../../Shared/UI/WomackSkin.h"
 
 TapeDelayPanel::TapeDelayPanel (juce::AudioProcessorValueTreeState& apvts, TapeDelayEffect& delay)
     : delayEffect (delay), reelViz (delay)
@@ -65,11 +66,7 @@ TapeDelayPanel::TapeDelayPanel (juce::AudioProcessorValueTreeState& apvts, TapeD
 
 void TapeDelayPanel::paint (juce::Graphics& g)
 {
-    g.setColour (juce::Colour (0xff1a1a1a));
-    g.fillRoundedRectangle (getLocalBounds().toFloat(), 8.0f);
-
-    g.setColour (juce::Colour (0xff6688cc));
-    g.drawRoundedRectangle (getLocalBounds().toFloat().reduced (1.0f), 8.0f, 1.5f);
+    WomackSkin::paintPanelShell (g, getLocalBounds().toFloat(), WomackSkin::accentBlue());
 }
 
 void TapeDelayPanel::resized()
@@ -101,9 +98,10 @@ void TapeDelayPanel::resized()
 
 void TapeDelayPanel::TapeReelViz::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colour (0xff0d0d0d));
+    auto frame = getLocalBounds().toFloat().reduced (1.0f);
+    WomackSkin::paintDisplayWell (g, frame, WomackSkin::accentBlue());
 
-    auto bounds = getLocalBounds().toFloat().reduced (8.0f);
+    auto bounds = frame.reduced (12.0f);
     float tapePos = delayRef.getTapePosition();
 
     // Draw two tape reels
@@ -121,7 +119,7 @@ void TapeDelayPanel::TapeReelViz::paint (juce::Graphics& g)
         g.drawEllipse (cx - reelRadius, cy - reelRadius, reelRadius * 2, reelRadius * 2, 1.0f);
 
         // Spokes
-        g.setColour (juce::Colour (0xff6688cc).withAlpha (0.6f));
+        g.setColour (WomackSkin::accentBlue().withAlpha (0.6f));
         for (int i = 0; i < 3; ++i)
         {
             float a = angle + i * juce::MathConstants<float>::twoPi / 3.0f;
@@ -131,7 +129,7 @@ void TapeDelayPanel::TapeReelViz::paint (juce::Graphics& g)
         }
 
         // Hub
-        g.setColour (juce::Colour (0xff6688cc));
+        g.setColour (WomackSkin::accentBlue());
         g.fillEllipse (cx - 4, cy - 4, 8, 8);
     };
 
@@ -139,6 +137,6 @@ void TapeDelayPanel::TapeReelViz::paint (juce::Graphics& g)
     drawReel (rightCx, -1.0f);
 
     // Tape path between reels
-    g.setColour (juce::Colour (0xff6688cc).withAlpha (0.3f));
+    g.setColour (WomackSkin::accentBlue().withAlpha (0.3f));
     g.drawLine (leftCx + reelRadius, cy, rightCx - reelRadius, cy, 2.0f);
 }

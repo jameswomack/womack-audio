@@ -1,12 +1,14 @@
 #include "ResponseCurve.h"
 #include "../DSP/NoteFrequency.h"
+#include "../../../Shared/UI/WomackSkin.h"
 #include <cmath>
 
 void ResponseCurve::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colour (0xff0d0d0d));
+    auto frame = getLocalBounds().toFloat().reduced (1.0f);
+    WomackSkin::paintDisplayWell (g, frame, WomackSkin::accentIce());
 
-    auto area = getLocalBounds().toFloat().reduced (2.0f);
+    auto area = frame.reduced (10.0f);
     if (area.getWidth() < 4.0f || area.getHeight() < 4.0f)
         return;
 
@@ -79,13 +81,13 @@ void ResponseCurve::paint (juce::Graphics& g)
         if (i == 0) curve.startNewSubPath (x, y);
         else        curve.lineTo (x, y);
     }
-    g.setColour (juce::Colour (0xff66ddff));
+    g.setColour (WomackSkin::accentIce());
     g.strokePath (curve, juce::PathStrokeType (2.0f));
 
     // --- Cutoff marker at the lens center. ---
     const float cx = uToX (u0);
     const float cb = bow (u0);
-    g.setColour (juce::Colour (0xffffaa33));
+    g.setColour (WomackSkin::accentAmber());
     g.drawVerticalLine ((int) cx, area.getY() + (bowHeight - cb), area.getBottom() - cb * 0.4f);
 
     const int midi = NoteFrequency::nearestMidi (cutoffHz);

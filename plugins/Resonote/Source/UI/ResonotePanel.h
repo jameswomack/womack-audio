@@ -4,6 +4,7 @@
 #include "../PluginProcessor.h"
 #include "../Parameters.h"
 #include "ResponseCurve.h"
+#include "../../../Shared/UI/WomackSkin.h"
 
 class ResonotePanel : public juce::Component,
                       public juce::Timer
@@ -33,6 +34,7 @@ private:
     ResponseCurve  responseCurve;
     juce::ToggleButton snapBtn { "SNAP" };
     juce::ToggleButton midiBtn { "MIDI" };
+    WomackSkin::LookAndFeel lookAndFeel { WomackSkin::accentIce() };
 
     using SliderAttachment   = juce::AudioProcessorValueTreeState::SliderAttachment;
     using ButtonAttachment   = juce::AudioProcessorValueTreeState::ButtonAttachment;

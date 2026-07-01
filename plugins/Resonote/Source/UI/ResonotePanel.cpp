@@ -5,6 +5,8 @@ ResonotePanel::ResonotePanel (ResonoteProcessor& processor)
     : proc (processor),
       responseCurve (processor)
 {
+    setLookAndFeel (&lookAndFeel);
+
     auto& apvts = proc.getAPVTS();
 
     modeParam      = apvts.getRawParameterValue (ParamIDs::mode);
@@ -12,10 +14,7 @@ ResonotePanel::ResonotePanel (ResonoteProcessor& processor)
 
     auto setupKnob = [this] (juce::Slider& s, const juce::String& suffix = "")
     {
-        s.setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-        s.setTextBoxStyle (juce::Slider::TextBoxBelow, false, 64, 18);
-        if (suffix.isNotEmpty())
-            s.setTextValueSuffix (suffix);
+        WomackSkin::configureKnob (s, this, suffix);
         addAndMakeVisible (s);
     };
 
@@ -26,10 +25,7 @@ ResonotePanel::ResonotePanel (ResonoteProcessor& processor)
 
     auto setupLabel = [this] (juce::Label& label)
     {
-        label.setJustificationType (juce::Justification::centred);
-        label.setColour (juce::Label::textColourId, juce::Colours::white.withAlpha (0.8f));
-        label.setFont (juce::FontOptions (12.0f, juce::Font::bold));
-        label.setInterceptsMouseClicks (false, false);
+        WomackSkin::configureLabel (label);
         addAndMakeVisible (label);
     };
 
@@ -40,8 +36,8 @@ ResonotePanel::ResonotePanel (ResonoteProcessor& processor)
     setupLabel (modeLabel);
 
     noteReadout.setJustificationType (juce::Justification::centred);
-    noteReadout.setColour (juce::Label::textColourId, juce::Colour (0xff66ddff));
-    noteReadout.setFont (juce::FontOptions (28.0f, juce::Font::bold));
+    noteReadout.setColour (juce::Label::textColourId, WomackSkin::accentIce());
+    noteReadout.setFont (juce::FontOptions (30.0f, juce::Font::bold));
     noteReadout.setInterceptsMouseClicks (false, false);
     addAndMakeVisible (noteReadout);
 
@@ -69,12 +65,16 @@ ResonotePanel::ResonotePanel (ResonoteProcessor& processor)
     snapAtt = std::make_unique<ButtonAttachment>   (apvts, ParamIDs::snap, snapBtn);
     midiAtt = std::make_unique<ButtonAttachment>   (apvts, ParamIDs::midiTrack, midiBtn);
 
+    modeSelector.setColour (juce::ComboBox::textColourId, WomackSkin::textStrong());
+    modeSelector.setColour (juce::ComboBox::outlineColourId, WomackSkin::accentIce().withAlpha (0.55f));
+
     startTimerHz (30);
 }
 
 ResonotePanel::~ResonotePanel()
 {
     stopTimer();
+    setLookAndFeel (nullptr);
 }
 
 void ResonotePanel::timerCallback()
@@ -92,6 +92,8 @@ void ResonotePanel::timerCallback()
     {
         gainKnob.setEnabled (isBell);
         gainLabel.setEnabled (isBell);
+        gainKnob.setAlpha (isBell ? 1.0f : 0.35f);
+        gainLabel.setAlpha (isBell ? 1.0f : 0.45f);
     }
 
     const bool midiOn = midiTrackParam->load() > 0.5f;
@@ -99,39 +101,46 @@ void ResonotePanel::timerCallback()
     {
         freqKnob.setEnabled  (! midiOn);
         freqLabel.setEnabled (! midiOn);
+        freqKnob.setAlpha (! midiOn ? 1.0f : 0.35f);
+        freqLabel.setAlpha (! midiOn ? 1.0f : 0.45f);
     }
 }
 
 void ResonotePanel::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colour (0xff111111));
+    WomackSkin::paintEditorBackground (g, getLocalBounds(), WomackSkin::accentIce());
 
-    g.setColour (juce::Colour (0xff66ddff));
-    g.setFont (juce::FontOptions (22.0f, juce::Font::bold));
-    g.drawText ("WOMACK RESONOTE", getLocalBounds().removeFromTop (36),
-                juce::Justification::centred);
+    auto bounds = getLocalBounds().reduced (18);
+    auto header = bounds.removeFromTop (56);
+
+    g.setColour (WomackSkin::textStrong());
+    g.setFont (juce::FontOptions (23.0f, juce::Font::bold));
+    g.drawText ("WOMACK RESONOTE", header.removeFromTop (28), juce::Justification::centred);
+
+    g.setColour (WomackSkin::textMuted());
+    g.setFont (juce::FontOptions (11.0f));
+    g.drawText ("note-aware resonant filter", header, juce::Justification::centred);
 }
 
 void ResonotePanel::resized()
 {
-    auto bounds = getLocalBounds().reduced (12);
-    bounds.removeFromTop (32);    // title
+    auto bounds = getLocalBounds().reduced (20);
+    bounds.removeFromTop (60);
 
-    auto topRow = bounds.removeFromTop (56);
-    auto modeArea = topRow.removeFromLeft (200);
-    modeLabel.setBounds (modeArea.removeFromTop (16));
+    auto topRow = bounds.removeFromTop (60);
+    auto modeArea = topRow.removeFromLeft (220);
+    modeLabel.setBounds (modeArea.removeFromTop (18));
     modeSelector.setBounds (modeArea.reduced (0, 4));
-    midiBtn.setBounds (topRow.removeFromRight (90).reduced (4));
-    snapBtn.setBounds (topRow.removeFromRight (90).reduced (4));
+    midiBtn.setBounds (topRow.removeFromRight (104).reduced (4, 10));
+    snapBtn.setBounds (topRow.removeFromRight (104).reduced (4, 10));
 
-    // Knob row pinned to the bottom (fixed height); the viz takes the rest.
-    auto knobRow = bounds.removeFromBottom (128);
+    auto knobRow = bounds.removeFromBottom (148);
     const int knobW = knobRow.getWidth() / 4;
 
     auto layoutKnob = [] (juce::Rectangle<int> area, juce::Label& label, juce::Slider& knob)
     {
-        label.setBounds (area.removeFromTop (16));
-        knob.setBounds (area.reduced (4, 0));
+        label.setBounds (area.removeFromTop (18));
+        knob.setBounds (area.reduced (2, 0));
     };
 
     layoutKnob (knobRow.removeFromLeft (knobW), freqLabel, freqKnob);
@@ -139,9 +148,6 @@ void ResonotePanel::resized()
     layoutKnob (knobRow.removeFromLeft (knobW), gainLabel, gainKnob);
     layoutKnob (knobRow,                        outLabel,  outKnob);
 
-    // Note readout just above the knobs.
-    noteReadout.setBounds (bounds.removeFromBottom (44));
-
-    // Response curve fills all remaining space and grows with the window.
+    noteReadout.setBounds (bounds.removeFromBottom (52).reduced (10, 2));
     responseCurve.setBounds (bounds.reduced (2));
 }
