@@ -31,6 +31,9 @@ jobs:
       - name: Build Release
         run: cmake --build build --config Release
 
+      - name: Run unit tests (Resonote)
+        run: ./build/plugins/Resonote/ResonoteTests_artefacts/Release/ResonoteTests
+
       - name: Refresh AU registry
         run: |
           killall -9 AudioComponentRegistrar 2>/dev/null || true
@@ -38,6 +41,9 @@ jobs:
 
       - name: Validate with auval
         run: auval -v aufx Wfx1 Wmck
+
+      - name: Validate Resonote with auval
+        run: auval -v aumf Rnt1 Wmck
 
       - name: Download pluginval
         run: |
@@ -58,12 +64,26 @@ jobs:
             --strictness-level 5 \
             --validate "$HOME/Library/Audio/Plug-Ins/VST3/Womack FX.vst3"
 
+      - name: Validate Resonote AU with pluginval
+        run: |
+          /tmp/pluginval.app/Contents/MacOS/pluginval \
+            --strictness-level 5 \
+            --validate "$HOME/Library/Audio/Plug-Ins/Components/Womack Resonote.component"
+
+      - name: Validate Resonote VST3 with pluginval
+        run: |
+          /tmp/pluginval.app/Contents/MacOS/pluginval \
+            --strictness-level 5 \
+            --validate "$HOME/Library/Audio/Plug-Ins/VST3/Womack Resonote.vst3"
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: WomackFX-plugins
+          name: WomackAudio-plugins
           path: |
             ~/Library/Audio/Plug-Ins/Components/Womack FX.component
             ~/Library/Audio/Plug-Ins/VST3/Womack FX.vst3
+            ~/Library/Audio/Plug-Ins/Components/Womack Resonote.component
+            ~/Library/Audio/Plug-Ins/VST3/Womack Resonote.vst3
           retention-days: 7

@@ -13,6 +13,14 @@ cmake -B "$BUILD_DIR" -G Xcode -S "$REPO_ROOT" -Wno-dev
 echo "==> cmake build (Release)"
 cmake --build "$BUILD_DIR" --config Release
 
+echo "==> ResonoteTests"
+if ./build/plugins/Resonote/ResonoteTests_artefacts/Release/ResonoteTests; then
+    echo "[PASS] ResonoteTests"
+else
+    echo "[FAIL] ResonoteTests"
+    exit 1
+fi
+
 # ── Kill AU cache so macOS picks up fresh copy ─────────────────────────────
 echo "==> refreshing AU cache"
 killall -9 AudioComponentRegistrar 2>/dev/null || true
@@ -24,6 +32,14 @@ if auval -v aufx Wfx1 Wmck; then
     echo "[PASS] auval"
 else
     echo "[FAIL] auval"
+    exit 1
+fi
+
+echo "==> auval (Resonote)"
+if auval -v aumf Rnt1 Wmck; then
+    echo "[PASS] auval Resonote"
+else
+    echo "[FAIL] auval Resonote"
     exit 1
 fi
 
@@ -50,6 +66,24 @@ if "$PLUGINVAL_BIN" --strictness-level 5 --validate "$VST3_PATH"; then
     echo "[PASS] pluginval VST3"
 else
     echo "[FAIL] pluginval VST3"
+    exit 1
+fi
+
+RESONOTE_AU_PATH="$HOME/Library/Audio/Plug-Ins/Components/Womack Resonote.component"
+echo "==> pluginval (Resonote AU)"
+if "$PLUGINVAL_BIN" --strictness-level 5 --validate "$RESONOTE_AU_PATH"; then
+    echo "[PASS] pluginval Resonote AU"
+else
+    echo "[FAIL] pluginval Resonote AU"
+    exit 1
+fi
+
+RESONOTE_VST3_PATH="$HOME/Library/Audio/Plug-Ins/VST3/Womack Resonote.vst3"
+echo "==> pluginval (Resonote VST3)"
+if "$PLUGINVAL_BIN" --strictness-level 5 --validate "$RESONOTE_VST3_PATH"; then
+    echo "[PASS] pluginval Resonote VST3"
+else
+    echo "[FAIL] pluginval Resonote VST3"
     exit 1
 fi
 
