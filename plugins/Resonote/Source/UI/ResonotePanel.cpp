@@ -124,21 +124,24 @@ void ResonotePanel::resized()
     midiBtn.setBounds (topRow.removeFromRight (90).reduced (4));
     snapBtn.setBounds (topRow.removeFromRight (90).reduced (4));
 
-    auto vizArea = bounds.removeFromTop (bounds.getHeight() / 2);
-    noteReadout.setBounds (vizArea.removeFromBottom (40));
-    responseCurve.setBounds (vizArea.reduced (2));
-
-    auto knobRow = bounds;
+    // Knob row pinned to the bottom (fixed height); the viz takes the rest.
+    auto knobRow = bounds.removeFromBottom (128);
     const int knobW = knobRow.getWidth() / 4;
 
     auto layoutKnob = [] (juce::Rectangle<int> area, juce::Label& label, juce::Slider& knob)
     {
         label.setBounds (area.removeFromTop (16));
-        knob.setBounds (area);
+        knob.setBounds (area.reduced (4, 0));
     };
 
     layoutKnob (knobRow.removeFromLeft (knobW), freqLabel, freqKnob);
     layoutKnob (knobRow.removeFromLeft (knobW), resLabel,  resKnob);
     layoutKnob (knobRow.removeFromLeft (knobW), gainLabel, gainKnob);
     layoutKnob (knobRow,                        outLabel,  outKnob);
+
+    // Note readout just above the knobs.
+    noteReadout.setBounds (bounds.removeFromBottom (44));
+
+    // Response curve fills all remaining space and grows with the window.
+    responseCurve.setBounds (bounds.reduced (2));
 }
