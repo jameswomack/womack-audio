@@ -39,6 +39,10 @@ public:
     /** Most-recently-applied filter frequency (post snap / MIDI). UI readout. */
     float getCurrentFrequencyHz() const noexcept { return currentFreqHz.load(); }
 
+    int  getScaleRoot()   const noexcept { return (int) rootParam->load(); }
+    int  getScaleType()   const noexcept { return (int) scaleParam->load(); }
+    bool isSnapEnabled()  const noexcept { return snapParam->load() > 0.5f; }
+
     /** Linear magnitude of the live filter at hz. UI response curve. Thread-safe. */
     float getMagnitudeAt (float hz) const noexcept
     {
@@ -60,6 +64,8 @@ private:
     std::atomic<float>* gainParam      = nullptr;
     std::atomic<float>* midiTrackParam = nullptr;
     std::atomic<float>* outputParam    = nullptr;
+    std::atomic<float>* rootParam      = nullptr;
+    std::atomic<float>* scaleParam     = nullptr;
 
     int lastMidiNote = -1;
     std::atomic<float> currentFreqHz { 220.0f };

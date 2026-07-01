@@ -23,12 +23,16 @@ private:
     std::atomic<float>* midiTrackParam = nullptr;
 
     juce::ComboBox modeSelector;
+    juce::ComboBox rootSelector;
+    juce::ComboBox scaleSelector;
     juce::Slider   freqKnob, resKnob, gainKnob, outKnob;
-    juce::Label    freqLabel { {}, "Frequency" },
-                   resLabel  { {}, "Resonance" },
-                   gainLabel { {}, "Gain" },
-                   outLabel  { {}, "Output" },
-                   modeLabel { {}, "Mode" };
+    juce::Label    freqLabel  { {}, "Frequency" },
+                   resLabel   { {}, "Resonance" },
+                   gainLabel  { {}, "Gain" },
+                   outLabel   { {}, "Output" },
+                   modeLabel  { {}, "Mode" },
+                   rootLabel  { {}, "Root" },
+                   scaleLabel { {}, "Scale" };
     juce::Label    noteReadout;   // big "A4  +3 c" display
     ResponseCurve  responseCurve;
     juce::ToggleButton snapBtn { "SNAP" };
@@ -40,7 +44,7 @@ private:
 
     std::unique_ptr<SliderAttachment>   freqAtt, resAtt, gainAtt, outAtt;
     std::unique_ptr<ButtonAttachment>   snapAtt, midiAtt;
-    std::unique_ptr<ComboBoxAttachment> modeAtt;
+    std::unique_ptr<ComboBoxAttachment> modeAtt, rootAtt, scaleAtt;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ResonotePanel)
 };

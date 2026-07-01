@@ -37,6 +37,10 @@ void ResponseCurve::paint (juce::Graphics& g)
     auto depth = [=] (float u) noexcept { const float d = (u - u0) / 0.42f; return std::exp (-d * d); };
 
     // --- Note gridlines (every note; label the Cs). ---
+    const bool  scaleActive = proc.isSnapEnabled() && proc.getScaleType() != 0;
+    const int   scaleRoot   = proc.getScaleRoot();
+    const auto  scaleType   = static_cast<NoteFrequency::Scale> (proc.getScaleType());
+
     g.setFont (juce::FontOptions (9.0f));
     const int midiMax = NoteFrequency::nearestMidi (maxHz) + 1;
     for (int midi = 12; midi <= midiMax; ++midi)
@@ -51,7 +55,8 @@ void ResponseCurve::paint (juce::Graphics& g)
         const float a = depth (u);
         const bool  isC = (((midi % 12) + 12) % 12) == 0;
 
-        g.setColour (juce::Colours::white.withAlpha ((isC ? 0.22f : 0.07f) * (0.35f + 0.65f * a)));
+        const bool highlight = isC || (scaleActive && NoteFrequency::inScale (midi, scaleRoot, scaleType));
+        g.setColour (juce::Colours::white.withAlpha ((highlight ? 0.22f : 0.07f) * (0.35f + 0.65f * a)));
         g.drawVerticalLine ((int) x, area.getY() + (bowHeight - b), area.getBottom() - b * 0.4f);
 
         if (isC)

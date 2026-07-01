@@ -16,6 +16,8 @@ ResonoteProcessor::ResonoteProcessor()
     gainParam      = apvts.getRawParameterValue (ParamIDs::gain);
     midiTrackParam = apvts.getRawParameterValue (ParamIDs::midiTrack);
     outputParam    = apvts.getRawParameterValue (ParamIDs::output);
+    rootParam      = apvts.getRawParameterValue (ParamIDs::root);
+    scaleParam     = apvts.getRawParameterValue (ParamIDs::scale);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout ResonoteProcessor::createParameterLayout()
@@ -47,6 +49,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout ResonoteProcessor::createPar
     layout.add (std::make_unique<juce::AudioParameterFloat> (
         juce::ParameterID { ParamIDs::output, 1 }, "Output",
         juce::NormalisableRange<float> (-24.0f, 24.0f, 0.1f), 0.0f));
+
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { ParamIDs::root, 1 }, "Root",
+        juce::StringArray { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" }, 0));
+
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { ParamIDs::scale, 1 }, "Scale",
+        juce::StringArray { "Chromatic", "Major", "Minor" }, 0));
 
     return layout;
 }
@@ -102,7 +112,9 @@ void ResonoteProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     {
         freq = freqParam->load();
         if (snapParam->load() > 0.5f)
-            freq = (float) NoteFrequency::snapToNote (freq);
+            freq = (float) NoteFrequency::snapToScale (
+                       freq, (int) rootParam->load(),
+                       static_cast<NoteFrequency::Scale> ((int) scaleParam->load()));
     }
 
     const int   modeIdx = (int) modeParam->load();
