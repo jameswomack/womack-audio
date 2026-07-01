@@ -1,5 +1,6 @@
 #include "FuzzPanel.h"
 #include "../Parameters.h"
+#include "../../../Shared/UI/WomackSkin.h"
 
 FuzzPanel::FuzzPanel (juce::AudioProcessorValueTreeState& apvts, FuzzEffect& fuzz)
     : fuzzEffect (fuzz), curveViz (fuzz)
@@ -60,11 +61,7 @@ FuzzPanel::FuzzPanel (juce::AudioProcessorValueTreeState& apvts, FuzzEffect& fuz
 
 void FuzzPanel::paint (juce::Graphics& g)
 {
-    g.setColour (juce::Colour (0xff1a1a1a));
-    g.fillRoundedRectangle (getLocalBounds().toFloat(), 8.0f);
-
-    g.setColour (juce::Colour (0xffcc8833));
-    g.drawRoundedRectangle (getLocalBounds().toFloat().reduced (1.0f), 8.0f, 1.5f);
+    WomackSkin::paintPanelShell (g, getLocalBounds().toFloat(), WomackSkin::accentCopper());
 }
 
 void FuzzPanel::resized()
@@ -97,9 +94,10 @@ void FuzzPanel::resized()
 
 void FuzzPanel::TransferCurveViz::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colour (0xff0d0d0d));
+    auto frame = getLocalBounds().toFloat().reduced (1.0f);
+    WomackSkin::paintDisplayWell (g, frame, WomackSkin::accentCopper());
 
-    auto bounds = getLocalBounds().toFloat().reduced (2.0f);
+    auto bounds = frame.reduced (8.0f);
 
     // Draw grid lines
     g.setColour (juce::Colours::white.withAlpha (0.1f));
@@ -129,6 +127,6 @@ void FuzzPanel::TransferCurveViz::paint (juce::Graphics& g)
         }
     }
 
-    g.setColour (juce::Colour (0xffff8800));
+    g.setColour (WomackSkin::accentAmber());
     g.strokePath (curve, juce::PathStrokeType (2.0f));
 }

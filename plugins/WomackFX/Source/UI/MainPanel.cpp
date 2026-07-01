@@ -1,4 +1,5 @@
 #include "MainPanel.h"
+#include "../../../Shared/UI/WomackSkin.h"
 
 MainPanel::MainPanel (juce::AudioProcessorValueTreeState& apvts,
                       FuzzEffect& fuzz, UnivibeEffect& vibe, TapeDelayEffect& delay)
@@ -13,10 +14,9 @@ MainPanel::MainPanel (juce::AudioProcessorValueTreeState& apvts,
 
 void MainPanel::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colour (0xff111111));
+    WomackSkin::paintEditorBackground (g, getLocalBounds(), WomackSkin::accentCopper());
 
-    // Title
-    g.setColour (juce::Colour (0xffcc8833));
+    g.setColour (WomackSkin::accentCopper());
     g.setFont (juce::FontOptions (22.0f, juce::Font::bold));
     g.drawText ("WOMACK FX", getLocalBounds().removeFromTop (36), juce::Justification::centred);
 }

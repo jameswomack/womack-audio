@@ -58,12 +58,24 @@ It is built in public, designed to sound alive, and structured so the code is ju
 
 ## UI preview
 
+### Womack FX
+
 <p align="center">
   <img src="docs/assets/womackfx-ui-screenshot.png" alt="Womack FX plugin UI screenshot" width="100%" />
 </p>
 
 <p align="center">
   <em>Three animated effect sections, colorful visualizers, and clearly labeled controls built to be played, not merely configured.</em>
+</p>
+
+### Womack Resonote
+
+<p align="center">
+  <img src="docs/assets/resonote-ui-screenshot.png" alt="Womack Resonote plugin UI screenshot" width="100%" />
+</p>
+
+<p align="center">
+  <em>A shared-shell single-band resonant filter UI with a large note readout, response display, and hardware-style control treatment.</em>
 </p>
 
 ## Why it stands out
@@ -206,7 +218,8 @@ plugins/WomackFX/
 - [x] Custom animated plugin UI
 - [x] Labeled controls for all effect sections
 - [x] AU / VST3 / Standalone builds
-- [ ] Screenshots and audio demos in the repo
+- [x] Screenshots in the repo
+- [ ] Audio demos in the repo
 - [ ] Presets / artist patches
 - [ ] Tempo-sync options for delay and modulation
 - [ ] Expanded effect modes and alternate voicings
