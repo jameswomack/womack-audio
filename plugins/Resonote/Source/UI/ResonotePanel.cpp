@@ -81,10 +81,10 @@ void ResonotePanel::timerCallback()
 {
     const float hz = proc.getCurrentFrequencyHz();
     const int   midi = NoteFrequency::nearestMidi (hz);
-    const double cents = NoteFrequency::centsFromNearest (hz);
+    const int    cents = juce::roundToInt (NoteFrequency::centsFromNearest (hz));
 
     juce::String txt = NoteFrequency::noteName (midi);
-    txt << "   " << (cents >= 0.0 ? "+" : "") << juce::String (cents, 0) << " c";
+    txt << "   " << (cents >= 0 ? "+" : "") << cents << " c";
     noteReadout.setText (txt, juce::dontSendNotification);
 
     const bool isBell = (int) modeParam->load() == 0;
