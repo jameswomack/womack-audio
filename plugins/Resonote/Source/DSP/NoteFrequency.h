@@ -49,4 +49,44 @@ namespace NoteFrequency
     {
         return midiToHz (nearestMidi (hz));
     }
+
+    enum class Scale { chromatic = 0, major = 1, minor = 2 };
+
+    /** Pitch-class membership test for a scale rooted at rootPc (0=C..11=B). */
+    inline bool inScale (int midiNote, int rootPc, Scale s) noexcept
+    {
+        if (s == Scale::chromatic)
+            return true;
+
+        static const int majorSet[7] = { 0, 2, 4, 5, 7, 9, 11 };
+        static const int minorSet[7] = { 0, 2, 3, 5, 7, 8, 10 }; // natural minor
+        const int* set = (s == Scale::major) ? majorSet : minorSet;
+
+        const int pc = (((midiNote - rootPc) % 12) + 12) % 12;
+        for (int i = 0; i < 7; ++i)
+            if (set[i] == pc)
+                return true;
+        return false;
+    }
+
+    /** Snaps hz to the nearest note within the given scale (rooted at rootPc).
+        Chromatic delegates to snapToNote. */
+    inline double snapToScale (double hz, int rootPc, Scale s) noexcept
+    {
+        if (s == Scale::chromatic)
+            return snapToNote (hz);
+
+        const double m = hzToMidi (hz);
+        const int center = (int) std::lround (m);
+        int    best = center;
+        double bestDist = 1.0e9;
+        for (int cand = center - 7; cand <= center + 7; ++cand)
+        {
+            if (! inScale (cand, rootPc, s))
+                continue;
+            const double d = std::abs ((double) cand - m);
+            if (d < bestDist) { bestDist = d; best = cand; }
+        }
+        return midiToHz (best);
+    }
 }

@@ -53,21 +53,32 @@ ResonotePanel::ResonotePanel (ResonoteProcessor& processor)
     addAndMakeVisible (snapBtn);
     addAndMakeVisible (midiBtn);
 
+    rootSelector.addItemList ({ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" }, 1);
+    scaleSelector.addItemList ({ "Chromatic", "Major", "Minor" }, 1);
+    setupLabel (rootLabel);
+    setupLabel (scaleLabel);
+    addAndMakeVisible (rootSelector);
+    addAndMakeVisible (scaleSelector);
+
     freqKnob.setTooltip ("Filter frequency. Snaps to the nearest note when SNAP is on; set by MIDI notes when MIDI is on.");
     resKnob.setTooltip  ("Resonance / Q. Higher values sharpen the band and add warm harmonic character.");
     gainKnob.setTooltip ("Boost or cut at the center frequency (Bell mode only).");
     outKnob.setTooltip  ("Output level trim.");
     modeSelector.setTooltip ("Filter shape: Bell, Low-Pass, or High-Pass.");
-    snapBtn.setTooltip ("Snap the frequency to the nearest chromatic note.");
+    snapBtn.setTooltip ("Snap the frequency to the nearest note in the selected scale.");
     midiBtn.setTooltip ("Let incoming MIDI notes set the frequency (last note wins).");
+    rootSelector.setTooltip ("Root note of the snap scale.");
+    scaleSelector.setTooltip ("Scale that SNAP quantizes the frequency to.");
 
-    modeAtt = std::make_unique<ComboBoxAttachment> (apvts, ParamIDs::mode, modeSelector);
-    freqAtt = std::make_unique<SliderAttachment>   (apvts, ParamIDs::frequency, freqKnob);
-    resAtt  = std::make_unique<SliderAttachment>   (apvts, ParamIDs::resonance, resKnob);
-    gainAtt = std::make_unique<SliderAttachment>   (apvts, ParamIDs::gain, gainKnob);
-    outAtt  = std::make_unique<SliderAttachment>   (apvts, ParamIDs::output, outKnob);
-    snapAtt = std::make_unique<ButtonAttachment>   (apvts, ParamIDs::snap, snapBtn);
-    midiAtt = std::make_unique<ButtonAttachment>   (apvts, ParamIDs::midiTrack, midiBtn);
+    modeAtt  = std::make_unique<ComboBoxAttachment> (apvts, ParamIDs::mode, modeSelector);
+    freqAtt  = std::make_unique<SliderAttachment>   (apvts, ParamIDs::frequency, freqKnob);
+    resAtt   = std::make_unique<SliderAttachment>   (apvts, ParamIDs::resonance, resKnob);
+    gainAtt  = std::make_unique<SliderAttachment>   (apvts, ParamIDs::gain, gainKnob);
+    outAtt   = std::make_unique<SliderAttachment>   (apvts, ParamIDs::output, outKnob);
+    snapAtt  = std::make_unique<ButtonAttachment>   (apvts, ParamIDs::snap, snapBtn);
+    midiAtt  = std::make_unique<ButtonAttachment>   (apvts, ParamIDs::midiTrack, midiBtn);
+    rootAtt  = std::make_unique<ComboBoxAttachment> (apvts, ParamIDs::root, rootSelector);
+    scaleAtt = std::make_unique<ComboBoxAttachment> (apvts, ParamIDs::scale, scaleSelector);
 
     startTimerHz (30);
 }
@@ -100,6 +111,13 @@ void ResonotePanel::timerCallback()
         freqKnob.setEnabled  (! midiOn);
         freqLabel.setEnabled (! midiOn);
     }
+
+    const bool scaleActive = proc.getScaleType() != 0; // 0 = Chromatic
+    if (rootSelector.isEnabled() != scaleActive)
+    {
+        rootSelector.setEnabled (scaleActive);
+        rootLabel.setEnabled (scaleActive);
+    }
 }
 
 void ResonotePanel::paint (juce::Graphics& g)
@@ -118,11 +136,20 @@ void ResonotePanel::resized()
     bounds.removeFromTop (32);    // title
 
     auto topRow = bounds.removeFromTop (56);
-    auto modeArea = topRow.removeFromLeft (200);
+    // Right side: SNAP + MIDI toggles.
+    midiBtn.setBounds (topRow.removeFromRight (84).reduced (4));
+    snapBtn.setBounds (topRow.removeFromRight (84).reduced (4));
+    // Left side: Mode | Root | Scale dropdowns.
+    auto dropW = juce::jmax (90, topRow.getWidth() / 3 - 6);
+    auto modeArea = topRow.removeFromLeft (dropW);
     modeLabel.setBounds (modeArea.removeFromTop (16));
-    modeSelector.setBounds (modeArea.reduced (0, 4));
-    midiBtn.setBounds (topRow.removeFromRight (90).reduced (4));
-    snapBtn.setBounds (topRow.removeFromRight (90).reduced (4));
+    modeSelector.setBounds (modeArea.reduced (2, 4));
+    auto rootArea = topRow.removeFromLeft (juce::jmin (dropW, 80));
+    rootLabel.setBounds (rootArea.removeFromTop (16));
+    rootSelector.setBounds (rootArea.reduced (2, 4));
+    auto scaleArea = topRow.removeFromLeft (juce::jmin (dropW, 120));
+    scaleLabel.setBounds (scaleArea.removeFromTop (16));
+    scaleSelector.setBounds (scaleArea.reduced (2, 4));
 
     // Knob row pinned to the bottom (fixed height); the viz takes the rest.
     auto knobRow = bounds.removeFromBottom (128);

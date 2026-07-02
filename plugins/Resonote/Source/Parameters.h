@@ -9,4 +9,6 @@ namespace ParamIDs
     inline constexpr const char* gain      = "gain";
     inline constexpr const char* midiTrack = "midiTrack";
     inline constexpr const char* output    = "output";
+    inline constexpr const char* root      = "root";
+    inline constexpr const char* scale     = "scale";
 }
