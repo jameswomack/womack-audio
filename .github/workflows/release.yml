@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number, e.g. 1.0.0'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  release:
+    name: Build, sign & notarize installer (macOS)
+    runs-on: macos-14
+    permissions:
+      contents: write   # needed to create/attach GitHub Releases
+
+    steps:
+      - name: Checkout (with JUCE submodule)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build, sign, notarize, and package
+        env:
+          APP_P12_BASE64:       ${{ secrets.DEVELOPER_ID_APP_P12_BASE64 }}
+          INSTALLER_P12_BASE64: ${{ secrets.DEVELOPER_ID_INSTALLER_P12_BASE64 }}
+          P12_PASSWORD:         ${{ secrets.P12_PASSWORD }}
+          KEYCHAIN_PASSWORD:    ${{ secrets.KEYCHAIN_PASSWORD }}
+          APPLE_ID:             ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID:        ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD:   ${{ secrets.APPLE_APP_PASSWORD }}
+          APP_CERT_NAME:        ${{ secrets.APP_CERT_NAME }}
+          INSTALLER_CERT_NAME:  ${{ secrets.INSTALLER_CERT_NAME }}
+        run: |
+          set -euo pipefail
+
+          # ── Version: strip a leading "v" from tag refs ─────────────────────
+          VERSION="${{ github.event.inputs.version || github.ref_name }}"
+          VERSION="${VERSION#v}"
+          echo "Releasing version $VERSION"
+
+          # ── Import both Developer ID certs into a temporary keychain ────────
+          KEYCHAIN="$RUNNER_TEMP/build.keychain-db"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+
+          echo "$APP_P12_BASE64"       | base64 --decode > "$RUNNER_TEMP/app.p12"
+          echo "$INSTALLER_P12_BASE64" | base64 --decode > "$RUNNER_TEMP/installer.p12"
+          security import "$RUNNER_TEMP/app.p12"       -k "$KEYCHAIN" -P "$P12_PASSWORD" \
+              -T /usr/bin/codesign -T /usr/bin/productbuild
+          security import "$RUNNER_TEMP/installer.p12" -k "$KEYCHAIN" -P "$P12_PASSWORD" \
+              -T /usr/bin/codesign -T /usr/bin/productbuild
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN" >/dev/null
+
+          # Put our keychain first on the search list so signing tools find the identities.
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | sed 's/"//g')
+
+          rm -f "$RUNNER_TEMP/app.p12" "$RUNNER_TEMP/installer.p12"
+
+          # ── Build + sign + notarize + staple ───────────────────────────────
+          scripts/package.sh "$VERSION"
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WomackAudio-installer
+          path: dist/WomackAudio-*-installer.pkg
+          retention-days: 30
+
+      - name: Attach installer to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create "${{ github.ref_name }}" \
+            dist/WomackAudio-*-installer.pkg \
+            --title "Womack Audio ${{ github.ref_name }}" \
+            --generate-notes \
+          || gh release upload "${{ github.ref_name }}" \
+            dist/WomackAudio-*-installer.pkg --clobber
