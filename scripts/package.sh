@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Builds, packages, signs, and notarizes Womack FX.
+# Builds, packages, signs, and notarizes the Womack Audio plugin suite
+# (Womack FX + Womack Resonote).
 # Required env vars: APPLE_ID, APPLE_TEAM_ID, APPLE_APP_PASSWORD,
 #                    INSTALLER_CERT_NAME, APP_CERT_NAME
 # Usage: scripts/package.sh [version]
-# Output: dist/WomackFX-<version>-installer.pkg
+# Output: dist/WomackAudio-<version>-installer.pkg
 
 set -euo pipefail
 
@@ -23,57 +24,52 @@ for var in APPLE_ID APPLE_TEAM_ID APPLE_APP_PASSWORD INSTALLER_CERT_NAME APP_CER
     fi
 done
 
-# ── 1. Build Release ───────────────────────────────────────────────────────
+# ── 1. Build Release (builds every plugin in the suite) ────────────────────
 echo "==> Building Release..."
 cmake -B "$BUILD_DIR" -G Xcode -S "$REPO_ROOT" -Wno-dev
 cmake --build "$BUILD_DIR" --config Release
 
-# ── 2. Locate build artifacts ─────────────────────────────────────────────
-AU_SRC="$HOME/Library/Audio/Plug-Ins/Components/Womack FX.component"
-VST3_SRC="$HOME/Library/Audio/Plug-Ins/VST3/Womack FX.vst3"
+# ── helper: sign a built plugin bundle and build its component .pkg ────────
+# args: <product name> <AU|VST3> <pkg identifier> <output pkg path>
+build_component_pkg () {
+    local product_name="$1" kind="$2" identifier="$3" out_pkg="$4"
+    local src install_loc
 
-if [ ! -d "$AU_SRC" ]; then
-    echo "Error: AU component not found at $AU_SRC"
-    exit 1
-fi
+    if [ "$kind" = "AU" ]; then
+        src="$HOME/Library/Audio/Plug-Ins/Components/${product_name}.component"
+        install_loc="/Library/Audio/Plug-Ins/Components"
+    else
+        src="$HOME/Library/Audio/Plug-Ins/VST3/${product_name}.vst3"
+        install_loc="/Library/Audio/Plug-Ins/VST3"
+    fi
 
-if [ ! -d "$VST3_SRC" ]; then
-    echo "Error: VST3 plugin not found at $VST3_SRC"
-    exit 1
-fi
+    if [ ! -d "$src" ]; then
+        echo "Error: ${kind} bundle not found at $src"
+        exit 1
+    fi
 
-# ── 3. Sign the plugins ────────────────────────────────────────────────────
-echo "==> Signing AU..."
-codesign --force --deep --options runtime \
-    --sign "${APP_CERT_NAME}" \
-    "$AU_SRC"
+    echo "==> Signing ${product_name} ${kind}..."
+    codesign --force --deep --options runtime --sign "${APP_CERT_NAME}" "$src"
 
-echo "==> Signing VST3..."
-codesign --force --deep --options runtime \
-    --sign "${APP_CERT_NAME}" \
-    "$VST3_SRC"
+    echo "==> Building ${product_name} ${kind} package..."
+    pkgbuild \
+        --component "$src" \
+        --install-location "$install_loc" \
+        --identifier "$identifier" \
+        --version "$VERSION" \
+        --sign "${INSTALLER_CERT_NAME}" \
+        "$out_pkg"
+}
 
-# ── 4. Build component packages ───────────────────────────────────────────
-echo "==> Building AU package..."
-pkgbuild \
-    --component "$AU_SRC" \
-    --install-location "/Library/Audio/Plug-Ins/Components" \
-    --identifier "com.womack.womackfx.au" \
-    --version "$VERSION" \
-    --sign "${INSTALLER_CERT_NAME}" \
-    "$STAGING_DIR/WomackFX-AU.pkg"
-
-echo "==> Building VST3 package..."
-pkgbuild \
-    --component "$VST3_SRC" \
-    --install-location "/Library/Audio/Plug-Ins/VST3" \
-    --identifier "com.womack.womackfx.vst3" \
-    --version "$VERSION" \
-    --sign "${INSTALLER_CERT_NAME}" \
-    "$STAGING_DIR/WomackFX-VST3.pkg"
+# ── 2-4. Sign + package each plugin/format. The staging pkg filenames must
+#         match the <pkg-ref> entries in distribution/distribution.xml. ─────
+build_component_pkg "Womack FX"       "AU"   "com.womack.womackfx.au"   "$STAGING_DIR/WomackFX-AU.pkg"
+build_component_pkg "Womack FX"       "VST3" "com.womack.womackfx.vst3" "$STAGING_DIR/WomackFX-VST3.pkg"
+build_component_pkg "Womack Resonote" "AU"   "com.womack.resonote.au"   "$STAGING_DIR/Resonote-AU.pkg"
+build_component_pkg "Womack Resonote" "VST3" "com.womack.resonote.vst3" "$STAGING_DIR/Resonote-VST3.pkg"
 
 # ── 5. Build distribution installer ──────────────────────────────────────
-INSTALLER="$DIST_DIR/WomackFX-${VERSION}-installer.pkg"
+INSTALLER="$DIST_DIR/WomackAudio-${VERSION}-installer.pkg"
 echo "==> Building distribution installer..."
 productbuild \
     --distribution "$REPO_ROOT/distribution/distribution.xml" \
